@@ -10,11 +10,11 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import { Avatar } from '@mui/material';
 import { systemConfig } from '../../config/System';
-import { Link,useLocation } from "react-router-dom";
-import { useSelector  } from 'react-redux'
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from 'react-redux'
 
 import { RootState } from '../../store/ConfigureStore'
-import  { routerPathProtectedUser } from '../../router/RouterPath'
+import { routerPathProtectedUser } from '../../router/RouterPath'
 
 // const categories = [
 //   {
@@ -40,9 +40,9 @@ import  { routerPathProtectedUser } from '../../router/RouterPath'
 
 const categories = [
   {
-    id: 'บริการสำหรับเจ้าหน้าที่',
+    id: 'บริการสำหรับผู้สมัครงาน',
     children: [
-      { id: 'สมัครงาน', icon: <HomeIcon /> , link : routerPathProtectedUser.Topic },
+      { id: 'สมัครงาน', icon: <HomeIcon />, link: routerPathProtectedUser.Job },
     ],
   },
 ];
@@ -82,18 +82,20 @@ export default function Navigator(props: DrawerProps) {
           </ListItemIcon>
           {systemConfig.NameInit}
         </ListItem>
-        <ListItem sx={{ ...item, ...itemCategory }}>
-          <ListItemIcon>
-            <Avatar src={`${process.env.PUBLIC_URL}/assets/images/mock/profile.png`} alt="My Avatar" />
-          </ListItemIcon>
-          <ListItemText>{user.idcard}</ListItemText>
-        </ListItem>
+        <Link to={`/profile`} style={{ textDecoration: 'none' }}>
+          <ListItem sx={{ ...item, ...itemCategory }}>
+            <ListItemIcon>
+              <Avatar src={`${process.env.PUBLIC_URL}/assets/images/mock/profile.png`} alt="My Avatar" />
+            </ListItemIcon>
+            <ListItemText>{user.idcard}</ListItemText>
+          </ListItem>
+        </Link>
         {categories.map(({ id, children }) => (
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon , link }) => (
+            {children.map(({ id: childId, icon, link }) => (
               <Link to={link} key={childId} style={{ textDecoration: 'none' }}>
                 <ListItem disablePadding >
                   <ListItemButton selected={splitLocation.includes(link.slice(1, link.length)) ? true : false} sx={item}>

@@ -1,12 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-//import ProtectedRoutes from './ProtectedRoutes';
-import {  routerPathPublic } from './RouterPath';
+import { routerPathProtectedUser , routerPathPublic } from './RouterPath';
 
 import Login from '../screen/auth/Login'
+import Register from '../screen/auth/Register'
 import { systemConfig } from '../config/System';
-
-
+import ProtectedRoutesUser from './ProtectedRoutesUser';
 
 function Routers() {
     return (
@@ -14,7 +13,8 @@ function Routers() {
             <Switch>
                 <Route exact path={`/`} component={Login} />
                 <Route exact path={`${routerPathPublic.Login}`} component={Login} />
-                {/* <Route path={Object.values(routerPathProtected)} component={ProtectedRoutes} /> */}
+                <Route exact path={`${routerPathPublic.Register}`} component={Register} />
+                <Route path={Object.values(routerPathProtectedUser)} component={ProtectedRoutesUser} />
             </Switch>
         </Router>
     )

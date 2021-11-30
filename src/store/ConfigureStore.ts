@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import userReducer  from "./reducer/User" 
 import breadcrumbsReducer  from "./reducer/Breadcrumbs" 
 import titleHeaderReducer  from "./reducer/TitleHeader" 
+import alertActionReducer  from "./reducer/AlertAction" 
 
 import {
   persistReducer,
@@ -25,7 +26,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   breadcrumbs : breadcrumbsReducer,
-  titleheader : titleHeaderReducer
+  titleheader : titleHeaderReducer,
+  alertaction : alertActionReducer
 })
 
 const counter_persistedReducer = persistReducer(persistConfig, rootReducer)

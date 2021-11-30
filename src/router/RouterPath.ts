@@ -1,5 +1,6 @@
 export const routerPathProtectedUser =  {
-    Topic : '/',
+    Job : '/job',
+    Profile : '/profile',
 }
 
 export const routerPathProtectedAdmin =  {
@@ -11,4 +12,5 @@ export const routerPathProtectedAdmin =  {
 export const routerPathPublic =  {
     Index : '/',
     Login : '/login',
+    Register : '/register',
 }

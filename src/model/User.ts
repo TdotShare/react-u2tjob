@@ -7,5 +7,6 @@ interface Auth {
 export type APIAuth_data = {
     bypass: boolean,
     data: Auth,
-    status : string
+    status : string,
+    message : string
 }

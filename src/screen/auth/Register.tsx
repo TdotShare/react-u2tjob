@@ -10,30 +10,44 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { systemConfig } from '../../config/System';
 import { useHistory } from 'react-router-dom';
-import { routerPathProtectedUser, routerPathProtectedAdmin, routerPathPublic } from '../../router/RouterPath';
-import AlertsAction from '../../components/AlertsAction';
+//import { routerPathProtectedUser, routerPathProtectedAdmin, routerPathPublic } from '../../router/RouterPath';
 
 
-const theme = createTheme({
-    typography: {
-        fontFamily: "'Mitr', sans-serif;",
-    }
-});
+import axios from 'axios';
+import { APIAuth_data } from '../../model/User';
 
-export default function Login() {
+
+export default function Register() {
 
     const history = useHistory()
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-        history.replace(`${routerPathProtectedUser.Job}`)
+        const target = e.target as typeof e.target & {
+            idcard: { value: number };
+            password: { value: string };
+        };
 
-    };
+        if (!target.idcard.value || !target.password.value) {
+            console.log("กรุณากรอกข้อมูลให้ครบ")
+            return
+        }
 
+        axios.post<APIAuth_data>(`${systemConfig.API}`).then(res => {
+            console.log(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+
+    }
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={createTheme({
+            typography: {
+                fontFamily: "'Mitr', sans-serif;",
+            }
+        })}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -50,27 +64,21 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         {systemConfig.NameFull}
                     </Typography>
-
-                    <AlertsAction  level={"error"} text={"test"}/>
-                   
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
-                            required
+                            type="number"
                             fullWidth
-                            id="username"
                             label="กรอกบัตรประชาชน"
-                            name="username"
+                            name="idcard"
                             autoFocus
                         />
                         <TextField
                             margin="normal"
-                            required
                             fullWidth
                             name="password"
                             label="รหัสผ่าน"
                             type="password"
-                            id="password"
                             autoComplete="current-password"
                         />
                         <Button
@@ -79,16 +87,16 @@ export default function Login() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            เข้าสู่ระบบ
+                            สมัครสมาชิก
                         </Button>
                     </Box>
                     <Button
-                        onClick={() => history.push(routerPathPublic.Register)}
+                        onClick={() => history.goBack()}
                         type="submit"
                         fullWidth
                         variant="contained"
                     >
-                        สมัครสมาชิก
+                        กลับ
                     </Button>
                 </Box>
             </Container>
