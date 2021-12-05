@@ -10,7 +10,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { systemConfig } from '../../config/System';
 import { useHistory } from 'react-router-dom';
-//import { routerPathProtectedUser, routerPathProtectedAdmin, routerPathPublic } from '../../router/RouterPath';
 
 
 import axios from 'axios';

@@ -1,0 +1,141 @@
+import React, { useEffect, useState } from 'react'
+import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
+import Paperbase from '../../components/template/Paperbase'
+import { useDispatch } from 'react-redux'
+import { setTitle } from '../../store/reducer/TitleHeader'
+import { setBreadCms } from '../../store/reducer/Breadcrumbs'
+import { routerPathProtectedUser } from '../../router/RouterPath'
+import { useHistory } from 'react-router-dom'
+import DataGridList from '../../components/DataGridList'
+import { GridColDef } from '@mui/x-data-grid'
+import exportedSwal from '../../utils/swal'
+
+function Training() {
+    return (
+        <Paperbase children={Pages()} />
+    )
+}
+
+
+function Pages() {
+
+    const columns: GridColDef[] = [
+        { field: 'name', headerName: 'ชื่อหัวข้อการอบรม' },
+        { field: 'time', headerName: 'ระยะเวลาการอบรม' },
+        {
+            field: "delete",
+            headerName: "",
+            sortable: false,
+            width: 130,
+            renderCell: (params) => {
+                return (
+                    <Button
+                        onClick={() => { }}
+                        variant="contained"
+                    >
+                        Delete
+                    </Button>
+                );
+            }
+        },
+    ];
+
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const [title] = useState<string>("ประวัติการฝึกอบรม")
+
+
+
+    useEffect(() => {
+        dispatch(setTitle(title))
+        dispatch(setBreadCms([
+            { value: "หน้าหลัก", link: routerPathProtectedUser.Job, active: false, },
+            { value: "โปรไฟล์", link: routerPathProtectedUser.Profile, active: false, },
+            { value: title, link: "", active: true, }
+        ]))
+        // eslint-disable-next-line 
+    }, [])
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        exportedSwal.actionSuccess("เพิ่มข้อมูล การอบรม เรียบร้อย !")
+        //const data = new FormData(event.currentTarget);
+
+    }
+
+
+    return (
+        <>
+            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
+                <AppBar
+                    position="static"
+                    color="default"
+                    elevation={0}
+                    sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+                >
+                    <Toolbar>
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item xs>
+                                <Typography >{title}</Typography>
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={() => history.goBack()} variant="contained" sx={{ mr: 1 }}>ย้อนกลับไปยังโปรไฟล์</Button>
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
+                <Container >
+                    <Box component="form" onSubmit={handleSubmit}
+                        noValidate
+                        sx={{ p: '1%', mt: 2 }}
+
+                    >
+                        <Grid container spacing={2} columns={12} >
+                            {
+                                [
+                                    { name: "name", label: "ชื่อหัวข้อการอบรม" },
+                                    { name: "time", label: "ระยะเวลาการอบรม", ex: "ตัวอย่าง xx/10/2563 - xx/04/2564 " },
+                                ].map(({ name, label, ex }, index) => (
+                                    <Grid key={index} item xs={12} sm={12} md={6} lg={6} >
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            name={name}
+                                            label={label}
+                                            placeholder={ex}
+                                        />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
+                            เพิ่มข้อมูล
+                        </Button>
+                    </Box>
+                </Container>
+            </Paper>
+
+            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', mt: 2 }}>
+                <AppBar
+                    position="static"
+                    color="default"
+                    elevation={0}
+                    sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+                >
+                    <Toolbar>
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item xs>
+                                <Typography >รายการประสบการณ์ทำงานของคุณ</Typography>
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
+                <Container >
+                    <DataGridList columns={columns} model={[]} />
+                </Container>
+            </Paper>
+        </>
+    )
+}
+
+export default Training

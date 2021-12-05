@@ -10,8 +10,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { systemConfig } from '../../config/System';
 import { useHistory } from 'react-router-dom';
-import { routerPathProtectedUser, routerPathProtectedAdmin, routerPathPublic } from '../../router/RouterPath';
-import AlertsAction from '../../components/AlertsAction';
+import { routerPathProtectedUser , routerPathPublic } from '../../router/RouterPath';
 
 
 const theme = createTheme({
@@ -50,8 +49,6 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         {systemConfig.NameFull}
                     </Typography>
-
-                    <AlertsAction  level={"error"} text={"test"}/>
                    
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField

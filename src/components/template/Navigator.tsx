@@ -14,7 +14,11 @@ import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux'
 
 import { RootState } from '../../store/ConfigureStore'
-import { routerPathProtectedUser } from '../../router/RouterPath'
+import { routerPathProtectedAdmin, routerPathProtectedUser } from '../../router/RouterPath'
+
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupIcon from '@mui/icons-material/Group';
+import TopicIcon from '@mui/icons-material/Topic';
 
 // const categories = [
 //   {
@@ -38,11 +42,22 @@ import { routerPathProtectedUser } from '../../router/RouterPath'
 //   },
 // ];
 
+// const categories = [
+//   {
+//     id: 'บริการสำหรับผู้สมัครงาน',
+//     children: [
+//       { id: 'สมัครงาน', icon: <HomeIcon />, link: routerPathProtectedUser.Job },
+//     ],
+//   },
+// ];
+
 const categories = [
   {
-    id: 'บริการสำหรับผู้สมัครงาน',
+    id: 'บริการสำหรับเจ้าหน้าที่',
     children: [
-      { id: 'สมัครงาน', icon: <HomeIcon />, link: routerPathProtectedUser.Job },
+      { id: 'ภาพรวมระบบ', icon: <DashboardIcon />, link: routerPathProtectedAdmin.Dashboard },
+      { id: 'เปิดรอบสมัครงาน', icon: <TopicIcon />, link: routerPathProtectedAdmin.Topic },
+      { id: 'ผู้ใช้งานระบบ', icon: <GroupIcon />, link: routerPathProtectedAdmin.Account },
     ],
   },
 ];
