@@ -19,6 +19,7 @@ import { Link, useHistory  } from "react-router-dom";
 import { RootState } from '../../store/ConfigureStore'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLoginfail, deleteUser } from '../../store/reducer/User'
+import { deleteAdmin } from '../../store/reducer/Admin'
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -38,6 +39,7 @@ export default function Header(props: HeaderProps) {
   const dispatch = useDispatch()
 
   const actionLogout = () => {
+    dispatch(deleteAdmin())
     dispatch(setLoginfail())
     dispatch(deleteUser())
     history.replace(routerPathPublic.Login)

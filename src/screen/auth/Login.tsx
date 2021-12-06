@@ -10,7 +10,13 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { systemConfig } from '../../config/System';
 import { useHistory } from 'react-router-dom';
-import { routerPathProtectedUser , routerPathPublic } from '../../router/RouterPath';
+import { routerPathProtectedAdmin, routerPathProtectedUser, routerPathPublic } from '../../router/RouterPath';
+import axios from 'axios';
+import { APIAuth_data } from '../../model/User';
+import exportedSwal from '../../utils/swal';
+import { addUser, setLoginSuccess } from '../../store/reducer/User';
+import { useDispatch } from 'react-redux';
+import { addAdmin } from '../../store/reducer/Admin';
 
 
 const theme = createTheme({
@@ -22,11 +28,65 @@ const theme = createTheme({
 export default function Login() {
 
     const history = useHistory()
+    const dispatch = useDispatch()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        history.replace(`${routerPathProtectedUser.Job}`)
+        const data = event.target as typeof event.target & {
+            username: { value: string };
+            password: { value: string };
+        };
+
+        let url = ""
+
+        if (Number.isFinite(parseInt(data.username.value))) {
+            url = `${systemConfig.API}/auth/login`
+        } else {
+            url = `${systemConfig.API}/auth/login_ird`
+        }
+
+        axios.post<APIAuth_data>(url, {
+            "username": data.username.value,
+            "password": data.password.value
+        }).then(res => {
+            if (res.data.bypass) {
+
+
+                if (res.data.data.role) {
+
+                    dispatch(addAdmin({
+                        email: res.data.data.email,
+                        username: res.data.data.username,
+                        fullname: `${res.data.data.firstname} ${res.data.data.surname}`,
+                        token: `${res.data.data.token}`
+                    }))
+                    dispatch(setLoginSuccess())
+
+                    history.push(routerPathProtectedAdmin.Dashboard)
+
+                } else {
+
+                    console.log(res.data.data)
+
+                    dispatch(addUser({
+                        user_id: res.data.data.id,
+                        idcard: res.data.data.idcard,
+                        token: `${res.data.data.token}`
+                    }))
+
+                    dispatch(setLoginSuccess())
+
+                    history.push(routerPathProtectedUser.Job)
+                }
+
+            } else {
+                exportedSwal.actionInfo(`${res.data.message}`)
+            }
+
+        }).catch(err => {
+            console.error(err);
+        })
 
     };
 
@@ -49,7 +109,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         {systemConfig.NameFull}
                     </Typography>
-                   
+
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"

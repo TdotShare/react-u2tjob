@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import userReducer  from "./reducer/User" 
+import adminReducer  from "./reducer/Admin" 
 import breadcrumbsReducer  from "./reducer/Breadcrumbs" 
 import titleHeaderReducer  from "./reducer/TitleHeader" 
 
@@ -24,6 +25,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
+  admin: adminReducer,
   breadcrumbs : breadcrumbsReducer,
   titleheader : titleHeaderReducer,
 })

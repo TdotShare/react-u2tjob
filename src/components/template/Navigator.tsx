@@ -42,16 +42,16 @@ import TopicIcon from '@mui/icons-material/Topic';
 //   },
 // ];
 
-// const categories = [
-//   {
-//     id: 'บริการสำหรับผู้สมัครงาน',
-//     children: [
-//       { id: 'สมัครงาน', icon: <HomeIcon />, link: routerPathProtectedUser.Job },
-//     ],
-//   },
-// ];
+const menuUser = [
+  {
+    id: 'บริการสำหรับผู้สมัครงาน',
+    children: [
+      { id: 'สมัครงาน', icon: <HomeIcon />, link: routerPathProtectedUser.Job },
+    ],
+  },
+];
 
-const categories = [
+const menuAdmin = [
   {
     id: 'บริการสำหรับเจ้าหน้าที่',
     children: [
@@ -84,6 +84,8 @@ export default function Navigator(props: DrawerProps) {
   const location = useLocation();
 
   const user = useSelector((state: RootState) => state.user.data)
+  const admin = useSelector((state: RootState) => state.admin.data)
+  const menuShow = user.idcard ? menuUser :  menuAdmin
 
   const { pathname } = location;
   const splitLocation = pathname.split("/");
@@ -102,10 +104,10 @@ export default function Navigator(props: DrawerProps) {
             <ListItemIcon>
               <Avatar src={`${process.env.PUBLIC_URL}/assets/images/mock/profile.png`} alt="My Avatar" />
             </ListItemIcon>
-            <ListItemText>{user.idcard}</ListItemText>
+            <ListItemText>{user.idcard ? user.idcard : admin.fullname}</ListItemText>
           </ListItem>
         </Link>
-        {categories.map(({ id, children }) => (
+        {menuShow.map(({ id, children }) => (
           <Box key={id} sx={{ bgcolor: '#101F33' }}>
             <ListItem sx={{ py: 2, px: 3 }}>
               <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
