@@ -10,6 +10,7 @@ export const routerPathProtectedUser =  {
 export const routerPathProtectedAdmin =  {
     Dashboard : '/dashboard',
     Topic : '/topic',
+    TopicUpdate : '/topic/update',
     Account : '/account',
 }
 

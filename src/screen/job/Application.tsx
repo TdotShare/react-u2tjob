@@ -22,7 +22,7 @@ function Pages() {
 
     const dispatch = useDispatch()
     const [title] = useState<string>("ยื่นใบสมัคร")
-    const [model] = useState<Topic>({ "id": 1, "name": "โครงการยกระดับเศรษฐกิจและสังคมรายตำบลแบบบูรณาการ รอบที่ 8", time: "10:11:2564" })
+    const [model] = useState<Topic>({ "id": 1, "name": "โครงการยกระดับเศรษฐกิจและสังคมรายตำบลแบบบูรณาการ รอบที่ 8", time: new Date() , round : 1})
     const [tambonWork] = useState(["พลกรัง", "โคกกรวด", "หมื่นไวย", "จันทึก", "พญาเย็น", "ดงใหญ่", "กระเบื้องใหญ่", "สีสุก", "บึงสำโรง", "ตูม", "มะเกลือใหม่", "หินดาด", "ทองหลาง"])
 
 

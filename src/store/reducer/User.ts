@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type UserType = {
-    user_id : string
+    user_id : number
     idcard: string,
     token: string
 }
@@ -13,7 +13,7 @@ export interface UserState {
 
 const initialState: UserState = {
     auth: false,
-    data: { user_id : "" , idcard: "",  token: "" }
+    data: { user_id : 0 , idcard: "",  token: "" }
 }
 
 export const userSlice = createSlice({
@@ -24,7 +24,7 @@ export const userSlice = createSlice({
             state.data = action.payload
         },
         deleteUser: (state) => {
-            state.data = { user_id : "" , idcard : "", token: "" }
+            state.data = { user_id : 0 , idcard : "", token: "" }
         },
         setLoginSuccess: (state) => {
             state.auth = true

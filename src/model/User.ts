@@ -1,6 +1,11 @@
 interface Auth {
-    user_id: number;
-    card_id: string;
+    id: number;
+    idcard: string
+    username : string;
+    firstname : string;
+    surname : string;
+    email : string;
+    role : number;
     token : string;
 }
 

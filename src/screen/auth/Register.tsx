@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 import { APIAuth_data } from '../../model/User';
+import exportedSwal from '../../utils/swal';
 
 
 export default function Register() {
@@ -23,18 +24,27 @@ export default function Register() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const target = e.target as typeof e.target & {
+        const data = e.target as typeof e.target & {
             idcard: { value: number };
             password: { value: string };
         };
 
-        if (!target.idcard.value || !target.password.value) {
-            console.log("กรุณากรอกข้อมูลให้ครบ")
+        if (!data.idcard.value || !data.password.value) {
+            exportedSwal.actionInfo("กรุณากรอกข้อมูลให้ครบ")
             return
         }
 
-        axios.post<APIAuth_data>(`${systemConfig.API}`).then(res => {
-            console.log(res.data)
+        if (data.idcard.value.toString().length !== 13) {
+            exportedSwal.actionInfo("กรุณากรอกเลขบัตรให้ครบ 13 หลัก")
+            return
+        }
+
+        axios.post<APIAuth_data>(`${systemConfig.API}/auth/register`, { "idcard": data.idcard.value, "password": data.password.value }).then(res => {
+            if (res.data.bypass) {
+                exportedSwal.actionSuccess("สมัครสมาชิกเรียบร้อย กลับไปยังหน้า login เพื่อเข้าสู่ระบบ")
+            } else {
+                exportedSwal.actionInfo(`การสมัครสมาชิกไม่สำเร็จ เนื่องจาก ${res.data.message}`)
+            }
         }).catch(err => {
             console.log(err)
         })

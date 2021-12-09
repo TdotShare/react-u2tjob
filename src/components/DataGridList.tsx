@@ -1,9 +1,7 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Topic } from '../model/Topic'
-import { Training } from '../model/Training'
 
 type AppPros = {
-    model :  Array<Topic | Training>,
+    model :  any,
     columns: GridColDef[],
     cbsel?: boolean
 }

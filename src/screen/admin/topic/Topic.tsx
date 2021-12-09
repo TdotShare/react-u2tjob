@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
@@ -10,6 +10,11 @@ import exportedSwal from '../../../utils/swal'
 import DataDatePicker from '../../../components/DataDatePicker'
 import DataGridList from '../../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
+import exportedAPITopic from '../../../utils/api/Topic'
+import { useQuery, useQueryClient } from 'react-query'
+import { APITopic_data } from '../../../model/Topic'
+import { RootState } from '../../../store/ConfigureStore'
+import LoadingData from '../../../components/LoadingData'
 
 
 
@@ -21,51 +26,91 @@ function Topic() {
 
 function Pages() {
 
+    const queryClient = useQueryClient()
+    const admin = useSelector((state: RootState) => state.admin.data)
+
+    const { data, isLoading } = useQuery<APITopic_data, Error>('admin-topic', async () => exportedAPITopic.getTopicAll(admin.token))
+
     const history = useHistory()
     const dispatch = useDispatch()
     const [title] = useState<string>("เปิดรอบสมัครงาน")
+    const [timeJob, setTimeJob] = useState<Date | null>(new Date())
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        exportedSwal.actionSuccess("เพิ่มข้อมูล การอบรม เรียบร้อย !")
-        //const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
+
+        if (formData.get('name') === "" || formData.get('round') === "") {
+            exportedSwal.actionInfo("กรุณากรอกข้อมูลให้ครบ !")
+            return
+        }
+        
+        let dataPost = {
+            "name": formData.get('name'),
+            "round": formData.get('round'),
+            'time': `${timeJob?.getFullYear()}-${timeJob!.getMonth() + 1}-${timeJob?.getDate()}`,
+        }
+
+        let resData = await exportedAPITopic.createTopic(dataPost, admin.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('admin-topic')
+            exportedSwal.actionSuccess(`เพิ่มข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(`เพิ่มข้อมูลไม่สำเร็จ`)
+        }
+
+    }
+
+
+    const actionDelete = async (id: number) => {
+
+        let resData = await exportedAPITopic.deleteTopic(id, admin.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('admin-topic')
+            exportedSwal.actionSuccess(`ลบข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(`${resData.message}`)
+        }
 
     }
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'ชื่องาน' },
+        { field: 'name', headerName: 'ชื่องาน', width: 400 },
         { field: 'round', headerName: 'รอบ' },
-        { field: 'status', headerName: 'สถานะการใช้งาน' },
-        { field: 'time', headerName: 'ปิดรับสมัคร' },
+        { field: 'status', headerName: 'สถานะการใช้งาน', renderCell: (params) => { return (<Typography>{params.row.status === 1 ? "เปิดการใช้งาน" : "ซ่อน"}</Typography>) } , width : 150 },
+        { field: 'time', headerName: 'ปิดรับสมัคร', width: 200 },
         {
-            field: "checked",
-            headerName: "",
+            field: "actions",
+            headerName: "Actions",
             sortable: false,
-            width: 130,
+            width: 500,
             renderCell: (params) => {
                 return (
-                    <Button
-                        onClick={() => { }}
-                        variant="contained"
-                    >
-                        ตรวจสอบผู้สมัคร
-                    </Button>
-                );
-            }
-        },
-        {
-            field: "delete",
-            headerName: "",
-            sortable: false,
-            width: 130,
-            renderCell: (params) => {
-                return (
-                    <Button
-                        onClick={() => { }}
-                        variant="contained"
-                    >
-                        Delete
-                    </Button>
+                    <>
+                        <Button
+                            onClick={() => history.push(`${routerPathProtectedAdmin.TopicUpdate}/${params.row.id}`) }
+                            variant="contained"
+                        >
+                            แก้ไขข้อมูล
+                        </Button>
+                        <div style={{ margin: 5 }}></div>
+                        <Button
+                            onClick={() => { }}
+                            variant="contained"
+                        >
+                            ตรวจสอบผู้สมัคร
+                        </Button>
+                        <div style={{ margin: 5 }}></div>
+                        <Button
+                            onClick={() => actionDelete(params.row.id)}
+                            color="secondary"
+                            variant="contained"
+                        >
+                            ลบข้อมูล
+                        </Button>
+                    </>
                 );
             }
         },
@@ -125,7 +170,7 @@ function Pages() {
                                 ))
                             }
                             <Grid item xs={12} sm={12} md={12} lg={12} >
-                                <DataDatePicker  title={`วันที่ปิดรับสมัคร`} dateData={(data : Date | null) => {console.log(data)}} />
+                                <DataDatePicker title={`วันที่ปิดรับสมัคร`} dateData={(data: Date | null) => setTimeJob(data)} />
                             </Grid>
                         </Grid>
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
@@ -151,7 +196,15 @@ function Pages() {
                     </Toolbar>
                 </AppBar>
                 <Container >
-                    <DataGridList columns={columns} model={[]} />
+                    {
+                        isLoading ?
+
+                            <LoadingData />
+
+                            :
+
+                            <DataGridList columns={columns} model={data?.data} />
+                    }
                 </Container>
             </Paper>
         </>

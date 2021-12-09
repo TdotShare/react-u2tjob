@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { AppBar,  Button,  Container, Grid, Paper, TextField , Toolbar, Typography } from '@mui/material'
-import { useDispatch } from 'react-redux'
+import { AppBar, Button, Container, Grid, Paper, Toolbar, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
@@ -8,6 +8,11 @@ import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
 import DataGridList from '../../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
+import { useQuery, useQueryClient } from 'react-query'
+import { RootState } from '../../../store/ConfigureStore'
+import { APIAccount_data } from '../../../model/Account'
+import exportedSwal from '../../../utils/swal'
+import exportedAPIAccount from '../../../utils/api/Account'
 
 
 
@@ -20,46 +25,91 @@ function Topic() {
 
 function Pages() {
 
+    const queryClient = useQueryClient()
+    const history = useHistory()
+    const dispatch = useDispatch()
+    const [title] = useState<string>("ผู้ใช้งานระบบ")
+
+    const admin = useSelector((state: RootState) => state.admin.data)
+
+
+    const { data } = useQuery<APIAccount_data, Error>('admin-account', async () => exportedAPIAccount.getAccountAll(admin.token))
+
+
+    const actionBanned = async (id: number) => {
+
+        let data = await exportedAPIAccount.bannedUser(id, admin.token)
+
+        if (data.bypass) {
+            queryClient.invalidateQueries('admin-account')
+            exportedSwal.actionSuccess(`เปลี่ยนสถานะ user เรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(`เปลี่ยนสถานะ user ไม่สำเร็จ`)
+        }
+
+    }
+
+    const actionResetPassword = async (id: number) => {
+
+        let data = await exportedAPIAccount.resetPassword(id, admin.token)
+
+        if (data.bypass) {
+            queryClient.invalidateQueries('admin-account')
+            exportedSwal.actionSuccess(`เปลี่ยนรหัสผ่านใหม่ user (123456) เรียบร้อย `)
+        } else {
+            exportedSwal.actionInfo(`เปลี่ยนรหัสผ่านใหม่ user ไม่สำเร็จ`)
+        }
+
+    }
+
     const columns: GridColDef[] = [
-        { field: 'idcard', headerName: 'บัตรประชาชน' },
-        { field: 'banned', headerName: 'สถานะการใช้งาน' },
+        { field: 'idcard', headerName: 'บัตรประชาชน', width: 150 },
         {
-            field: "checked",
-            headerName: "",
-            sortable: false,
-            width: 130,
+            field: 'banned',
+            headerName: 'สถานะการใช้งาน',
+            width: 150,
             renderCell: (params) => {
                 return (
-                    <Button
-                        onClick={() => { }}
-                        variant="contained"
-                    >
-                        ระงับการใช้งาน
-                    </Button>
+                    <Typography>
+                        {params.row.banned === 0 ? "ปกติ" : "ระงับการใช้งาน"}
+                    </Typography>
                 );
             }
         },
         {
-            field: "delete",
-            headerName: "",
+            field: "actions",
+            headerName: "Actions",
             sortable: false,
-            width: 130,
+            width: 400,
             renderCell: (params) => {
                 return (
+                    <>
                     <Button
-                        onClick={() => { }}
+                        onClick={() => history.push("") }
                         variant="contained"
                     >
-                        Delete
+                        ดูข้อมูลผู้ใช้งาน
                     </Button>
+                    <div style={{ margin: 5 }}></div>
+                    <Button
+                        onClick={() => actionBanned(params.row.id)}
+                        variant="contained"
+                    >
+                        {params.row.banned === 0 ? "ระงับการใช้งาน" : "ปลดการระงับใช้งาน"}
+                    </Button>
+                    <div style={{ margin: 5 }}></div>
+                    <Button
+                        onClick={() => actionResetPassword(params.row.id)}
+                        variant="contained"
+                        color={`secondary`}
+                    >
+                        reset password
+                    </Button>
+                    </>
                 );
             }
         },
     ];
-
-    const history = useHistory()
-    const dispatch = useDispatch()
-    const [title] = useState<string>("ผู้ใช้งานระบบ")
 
     useEffect(() => {
         dispatch(setTitle(title))
@@ -72,6 +122,7 @@ function Pages() {
 
 
     return (
+
         <>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', mt: 2 }}>
                 <AppBar
@@ -89,7 +140,7 @@ function Pages() {
                     </Toolbar>
                 </AppBar>
                 <Container >
-                    <DataGridList columns={columns} model={[]} />
+                    <DataGridList columns={columns} model={data?.data} />
                 </Container>
             </Paper>
         </>
