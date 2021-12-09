@@ -1,6 +1,6 @@
 import React , { useState , useEffect }from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+//import { useHistory } from 'react-router-dom'
 import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
@@ -17,7 +17,7 @@ function Topic() {
 
 function Pages() {
 
-    const history = useHistory()
+    //const history = useHistory()
     const dispatch = useDispatch()
     const [title] = useState<string>("ภาพรวมระบบ")
 

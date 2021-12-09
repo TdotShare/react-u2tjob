@@ -1,7 +1,4 @@
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Topic } from '../model/Topic'
-import { Training } from '../model/Training'
-import { Account } from '../model/Account'
 
 type AppPros = {
     model :  any,

@@ -32,7 +32,7 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
-    const [model] = useState<Topic>({ id: 1, name: "test01", time: "test01" })
+    const [model] = useState<Topic>({ id: 1, name: "test01", time: new Date() , round : 1})
 
     return (
         <>

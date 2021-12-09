@@ -9,6 +9,7 @@ import { LocalizationProvider } from '@mui/lab';
 
 type AppPros = {
     title : string
+    setValue? : Date
     dateData :  (data : Date | null) => void,
 } 
 
@@ -27,10 +28,9 @@ function DataDatePicker(props : AppPros) {
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <MobileDatePicker
-                
                 label={`${props.title}`}
                 inputFormat="yyyy-MM-dd"
-                value={value}
+                value={props.setValue ? props.setValue : value}
                 onChange={handleChange}
                 renderInput={(params) => <TextField fullWidth {...params} />}
             />
