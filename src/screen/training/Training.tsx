@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
 import Paperbase from '../../components/template/Paperbase'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTitle } from '../../store/reducer/TitleHeader'
 import { setBreadCms } from '../../store/reducer/Breadcrumbs'
 import { routerPathProtectedUser } from '../../router/RouterPath'
@@ -9,6 +9,13 @@ import { useHistory } from 'react-router-dom'
 import DataGridList from '../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
 import exportedSwal from '../../utils/swal'
+
+
+import { APITraining_data } from '../../model/Training'
+import exportedAPITraining from '../../utils/api/Training'
+import { RootState } from '../../store/ConfigureStore'
+import { useQuery, useQueryClient } from 'react-query'
+import LoadingData from '../../components/LoadingData'
 
 function Training() {
     return (
@@ -19,9 +26,15 @@ function Training() {
 
 function Pages() {
 
+    const queryClient = useQueryClient()
+
+    const user = useSelector((state: RootState) => state.user.data)
+
+    const { data, isLoading } = useQuery<APITraining_data, Error>('training-data', async () => exportedAPITraining.getTraining(user.token))
+
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'ชื่อหัวข้อการอบรม' },
-        { field: 'time', headerName: 'ระยะเวลาการอบรม' },
+        { field: 'name', headerName: 'ชื่อหัวข้อการอบรม' , width : 350 },
+        { field: 'time', headerName: 'ระยะเวลาการอบรม' , width : 250 },
         {
             field: "delete",
             headerName: "",
@@ -30,8 +43,9 @@ function Pages() {
             renderCell: (params) => {
                 return (
                     <Button
-                        onClick={() => { }}
+                        onClick={() => actionDeleteTraining(params.row.id)}
                         variant="contained"
+                        color='secondary'
                     >
                         Delete
                     </Button>
@@ -56,10 +70,41 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit =  async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        exportedSwal.actionSuccess("เพิ่มข้อมูล การอบรม เรียบร้อย !")
-        //const data = new FormData(event.currentTarget);
+        const data = new FormData(event.currentTarget);
+
+        if(!data.get('name') || !data.get('time') ){
+            exportedSwal.actionInfo(`กรุณากรอกข้อมูลให้ครบ !`)
+            return
+        }
+
+        let dataPost = {
+            name: data.get('name'),
+            time: data.get('time'),
+        }
+
+        let resData = await exportedAPITraining.createTraining(dataPost, user.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('training-data')
+            exportedSwal.actionSuccess(`เพิ่มข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(resData.message)
+        }
+
+    }
+
+    const actionDeleteTraining = async (id: number) => {
+
+        let data = await exportedAPITraining.deleteTraining(id , user.token)
+
+        if (data.bypass) {
+            queryClient.invalidateQueries('training-data')
+            exportedSwal.actionSuccess(`ลบข้อมูลเรียบร้อย !`)
+        } else {
+            exportedSwal.actionInfo(`ลบข้อมูลไม่สำเร็จ !`)
+        }
 
     }
 
@@ -131,7 +176,15 @@ function Pages() {
                     </Toolbar>
                 </AppBar>
                 <Container >
-                    <DataGridList columns={columns} model={[]} />
+                {
+                        isLoading ? 
+
+                        <LoadingData />
+
+                        :
+
+                        <DataGridList columns={columns} model={data?.data} />
+                    }
                 </Container>
             </Paper>
         </>

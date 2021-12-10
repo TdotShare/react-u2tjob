@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { AppBar, Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Toolbar, Typography } from '@mui/material'
 import Paperbase from '../../components/template/Paperbase'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTitle } from '../../store/reducer/TitleHeader'
 import { setBreadCms } from '../../store/reducer/Breadcrumbs'
 import { routerPathProtectedUser } from '../../router/RouterPath'
@@ -9,6 +9,12 @@ import { useHistory } from 'react-router-dom'
 import DataGridList from '../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
 import exportedSwal from '../../utils/swal'
+
+import { useQuery, useQueryClient } from 'react-query'
+import exportedAPIEducation from '../../utils/api/Education'
+import { RootState } from '../../store/ConfigureStore'
+import { APIEducation_data } from '../../model/Education'
+import LoadingData from '../../components/LoadingData'
 
 function Education() {
     return (
@@ -18,6 +24,9 @@ function Education() {
 
 
 function Pages() {
+
+    const queryClient = useQueryClient()
+
 
     const [degree] = useState([
         "ประถมศึกษา",
@@ -31,8 +40,29 @@ function Pages() {
         "ปริญญาเอก"
     ])
 
+    const [degreeName, setDegreeName] = useState<number>(0)
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setDegreeName(parseInt(event.target.value));
+    };
+
+    const user = useSelector((state: RootState) => state.user.data)
+
+    const { data, isLoading } = useQuery<APIEducation_data, Error>('education-data', async () => exportedAPIEducation.getEducation(user.token))
+
     const columns: GridColDef[] = [
-        { field: 'degree_id', headerName: 'ระดับวุฒิ' },
+        {
+            field: 'degree_id', 
+            headerName: 'ระดับวุฒิ',
+            width : 200 , 
+            renderCell: (params) => {
+                return (
+                    <Typography>
+                        {degree[params.row.degree_id]}
+                    </Typography>
+                );
+            }
+        },
         { field: 'major', headerName: 'สาขาวิชา' },
         { field: 'gpa', headerName: 'gpa' },
         { field: 'university', headerName: 'จบจาก' },
@@ -45,8 +75,9 @@ function Pages() {
             renderCell: (params) => {
                 return (
                     <Button
-                        onClick={() => { }}
+                        onClick={() => actionDeleteEducation(params.row.id)}
                         variant="contained"
+                        color='secondary'
                     >
                         Delete
                     </Button>
@@ -59,10 +90,45 @@ function Pages() {
     const dispatch = useDispatch()
     const [title] = useState<string>("ประวัติการศึกษา")
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const actionDeleteEducation = async (id: number) => {
+
+        let data = await exportedAPIEducation.deleteEducation(id, user.token)
+
+        if (data.bypass) {
+            queryClient.invalidateQueries('education-data')
+            exportedSwal.actionSuccess(`ลบข้อมูลเรียบร้อย !`)
+        } else {
+            exportedSwal.actionInfo(`ลบข้อมูลไม่สำเร็จ !`)
+        }
+
+    }
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        //const data = new FormData(event.currentTarget);
+        const data = new FormData(event.currentTarget);
+
+        if(!data.get('major') || !data.get('gpa') || !data.get('university') || !data.get('timeend')  ){
+            exportedSwal.actionInfo(`กรุณากรอกข้อมูลให้ครบ !`)
+            return
+        }
+
+        let dataPost = {
+            degree_id: degreeName,
+            major: data.get('major'),
+            gpa: data.get('gpa'),
+            university: data.get('university'),
+            timeend: data.get('timeend'),
+        }
+
+        let resData = await exportedAPIEducation.createEducation(dataPost, user.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('education-data')
+            exportedSwal.actionSuccess(`เพิ่มข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(resData.message)
+        }
 
         exportedSwal.actionSuccess("เพิ่มข้อมูล ประวัติการศึกษา เรียบร้อย !")
 
@@ -135,13 +201,23 @@ function Pages() {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12} md={12} lg={12} >
+                                <TextField
+                                    fullWidth
+                                    required
+                                    placeholder='2552 - 2558'
+                                    name="timeend"
+                                    label="ระยะเวลา"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12} >
                                 <FormControl fullWidth >
-                                    <InputLabel id="demo-simple-select-label">เลือกมหาวิทยาลัย</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">เลือกระดับการศึกษา</InputLabel>
                                     <Select
+                                        onChange={handleChange}
                                         labelId="demo-simple-select-label"
                                         name={`gs_university_id`}
-                                        value={""}
-                                        label="เลือกมหาวิทยาลัย"
+                                        value={degreeName.toString()}
+                                        label="เลือกระดับการศึกษา"
                                     >
                                         {degree.map((item, index) => (
                                             <MenuItem key={index} value={index}>{item}</MenuItem>
@@ -180,7 +256,16 @@ function Pages() {
                     </Toolbar>
                 </AppBar>
                 <Container >
-                    <DataGridList columns={columns} model={[]} />
+                    {
+                        isLoading ?
+
+                            <LoadingData />
+
+                            :
+
+                            <DataGridList columns={columns} model={data?.data} />
+                    }
+
                 </Container>
             </Paper>
         </>
