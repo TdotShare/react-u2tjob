@@ -6,3 +6,11 @@ export interface Training {
     create_at : string;
     update_at : string;
 }
+
+
+export type APITraining_data = {
+    bypass: boolean,
+    data: Training,
+    status : string,
+    message : string
+}

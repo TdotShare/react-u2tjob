@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { AppBar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, Paper, Select, TextField, Toolbar, Typography ,  SelectChangeEvent, MenuItem   } from '@mui/material'
+import { AppBar, Box, Button, Container, Divider, FormControl, Grid, InputLabel, Paper, Select, TextField, Toolbar, Typography, SelectChangeEvent, MenuItem } from '@mui/material'
 import Paperbase from '../../components/template/Paperbase'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTitle } from './../../store/reducer/TitleHeader'
 import { setBreadCms } from './../../store/reducer/Breadcrumbs'
 import { routerPathProtectedUser } from '../../router/RouterPath'
 import { useHistory } from 'react-router-dom'
 import exportedSwal from '../../utils/swal'
+import exportedAPIProfile from '../../utils/api/Profile'
+import { RootState } from '../../store/ConfigureStore'
+import { useQuery, useQueryClient } from 'react-query'
+import { APIProfile_data } from '../../model/Profile'
+import LoadingData from '../../components/LoadingData'
 
 function Index() {
     return (
@@ -19,14 +24,19 @@ function Pages() {
 
     const history = useHistory()
     const dispatch = useDispatch()
+
+    const queryClient = useQueryClient()
+    const user = useSelector((state: RootState) => state.user.data)
     const [title] = useState<string>("โปรไฟล์ผู้ใช้งาน")
     const [titleName, setTitleName] = React.useState('');
 
+    const { data, isLoading } = useQuery<APIProfile_data, Error>('profile-view', async () => exportedAPIProfile.getProfile(user.token))
+
     const handleChange = (event: SelectChangeEvent) => {
         setTitleName(event.target.value);
-      };
+    };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
@@ -47,7 +57,15 @@ function Pages() {
             "work_detail": data.get('work_detail'),
         }
 
-        console.log(profileData)
+
+        let resData = await exportedAPIProfile.updateProfile(profileData, user.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('profile-view')
+            exportedSwal.actionSuccess(`แก้ไขข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(resData.message)
+        }
 
         exportedSwal.actionSuccess("บันทึกข้อมูล โปรไฟล์ เรียบร้อย !")
     }
@@ -61,6 +79,7 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
+    console.log(data?.data)
 
     return (
         <>
@@ -90,95 +109,110 @@ function Pages() {
                         sx={{ p: '1%', mt: 2 }}
 
                     >
-                        <Grid container spacing={2} columns={12} >
-                            <Grid item xs={12} sm={12} md={4} lg={4} >
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">คำนำหน้า</InputLabel>
-                                    <Select
-                                        value={titleName}
-                                        label="คำนำหน้า"
-                                        onChange={handleChange}
-                                    >{
-                                        ["นาย" , "นาง" , "นางสาว"].map((item , index) => (
-                                            <MenuItem key={index} value={item}>{item}</MenuItem>
-                                        ))
-                                    }
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            {
-                                [
-                                    { name: "firstname", label: "ชื่อจริง" },
-                                    { name: "surname", label: "ชื่อนามสกุล" },
-                                    { name: "birthday", label: "วันเกิด", ex: "ตัวอย่าง xx/05/2539" },
-                                    { name: "email", label: "email" },
-                                    { name: "nationality", label: "สัญชาติ" },
-                                    { name: "religion", label: "ศาสนา" },
-                                    { name: "tel", label: "เบอร์" },
-                                    { name: "status", label: "สถานภาพ" },
-                                ].map(({ name, label, ex }, index) => (
-                                    <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
-                                        <TextField
-                                            fullWidth
-                                            required
-                                            name={name}
-                                            label={label}
-                                            placeholder={ex}
-                                        />
+                        {
+                            isLoading ?
+
+                                <LoadingData />
+
+                                :
+                                <>
+                                    <Grid container spacing={2} columns={12} >
+                                        <Grid item xs={12} sm={12} md={4} lg={4} >
+                                            <FormControl fullWidth>
+                                                <InputLabel id="demo-simple-select-label">คำนำหน้า</InputLabel>
+                                                <Select
+                                                    value={data?.data ? data?.data.title : titleName}
+                                                    label="คำนำหน้า"
+                                                    onChange={handleChange}
+                                                >{
+                                                        ["นาย", "นาง", "นางสาว"].map((item, index) => (
+                                                            <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        {
+                                            [
+                                                { name: "firstname", label: "ชื่อจริง", value: data?.data  ? data.data.firstname : ""   },
+                                                { name: "surname", label: "ชื่อนามสกุล" , value: data?.data  ? data.data.surname : "" },
+                                                { name: "birthday", label: "วันเกิด", ex: "ตัวอย่าง วัน-เดือน-ปี | 01-01-2539", value: data?.data  ? data.data.birthday : ""  },
+                                                { name: "email", label: "email" , value: data?.data  ? data.data.email : "" },
+                                                { name: "nationality", label: "สัญชาติ" , value:  data?.data  ? data.data.nationality: "" },
+                                                { name: "religion", label: "ศาสนา" , value: data?.data  ? data.data.religion : "" },
+                                                { name: "tel", label: "เบอร์"  , value: data?.data  ? data.data.tel : "" },
+                                                { name: "status", label: "สถานภาพ" , value: data?.data  ? data.data.status : "" },
+                                            ].map(({ name, label, ex, value }, index) => (
+                                                <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
+                                                    <TextField
+                                                        fullWidth
+                                                        required
+                                                        name={name}
+                                                        label={label}
+                                                        placeholder={ex}
+                                                        defaultValue={value}
+                                                    />
+                                                </Grid>
+                                            ))
+                                        }
+                                        <Grid item xs={12} sm={12} md={12} lg={12} >
+                                            <TextField
+                                                multiline
+                                                fullWidth
+                                                name={"address_current"}
+                                                label={"ที่อยู่ปัจจุบัน"}
+                                                defaultValue={data?.data  ? data.data.address_current : ""}
+                                                rows={3}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={12} lg={12} >
+                                            <TextField
+                                                multiline
+                                                fullWidth
+                                                name={"address_home"}
+                                                label={"ที่อยู่ตามทะเบียนบ้าน"}
+                                                defaultValue={data?.data  ? data.data.address_home : ""}
+                                                rows={3}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                ))
-                            }
-                            <Grid item xs={12} sm={12} md={12} lg={12} >
-                                <TextField
-                                    multiline
-                                    fullWidth
-                                    name={"address_current"}
-                                    label={"ที่อยู่ปัจจุบัน"}
-                                    rows={3}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={12} lg={12} >
-                                <TextField
-                                    multiline
-                                    fullWidth
-                                    name={"address_home"}
-                                    label={"ที่อยู่ตามทะเบียนบ้าน"}
-                                    rows={3}
-                                />
-                            </Grid>
-                        </Grid>
 
-                        <Divider sx={{ marginTop: 2, marginBottom: 2 }}></Divider>
+                                    <Divider sx={{ marginTop: 2, marginBottom: 2 }}></Divider>
 
-                        <Grid container spacing={2} columns={12} >
-                            {
-                                [
-                                    { name: "job_name", label: "ชื่อตำแหน่ง" },
-                                    { name: "address_job", label: "ที่ทำงานปัจจุบัน" },
-                                ].map(({ name, label }, index) => (
-                                    <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
-                                        <TextField
-                                            fullWidth
-                                            name={name}
-                                            label={label}
-                                        />
+                                    <Grid container spacing={2} columns={12} >
+                                        {
+                                            [
+                                                { name: "job_name", label: "ชื่อตำแหน่ง" , value : data?.data  ? data.data.job_name : "" },
+                                                { name: "address_job", label: "ที่ทำงานปัจจุบัน" , value : data?.data  ? data.data.address_job : "" },
+                                            ].map(({ name, label , value }, index) => (
+                                                <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
+                                                    <TextField
+                                                        fullWidth
+                                                        name={name}
+                                                        label={label}
+                                                        defaultValue={value}
+                                                    />
+                                                </Grid>
+                                            ))
+                                        }
+                                        <Grid item xs={12} sm={12} md={12} lg={12} >
+                                            <TextField
+                                                multiline
+                                                fullWidth
+                                                name={"work_detail"}
+                                                label={"รายละเอียดงานที่ทำปัจจุบัน"}
+                                                defaultValue={data?.data  ? data.data.work_detail : ""}
+                                                rows={3}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                ))
-                            }
-                            <Grid item xs={12} sm={12} md={12} lg={12} >
-                                <TextField
-                                    multiline
-                                    fullWidth
-                                    name={"work_detail"}
-                                    label={"รายละเอียดงานที่ทำปัจจุบัน"}
-                                    rows={3}
-                                />
-                            </Grid>
-                        </Grid>
 
-                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
-                            บันทึกข้อมูล
-                        </Button>
+                                    <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} >
+                                        บันทึกข้อมูล
+                                    </Button>
+                                </>
+                        }
+
                     </Box>
                 </Container>
             </Paper>

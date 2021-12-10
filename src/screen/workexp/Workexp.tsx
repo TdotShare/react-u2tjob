@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
 import Paperbase from '../../components/template/Paperbase'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTitle } from '../../store/reducer/TitleHeader'
 import { setBreadCms } from '../../store/reducer/Breadcrumbs'
 import { routerPathProtectedUser } from '../../router/RouterPath'
@@ -9,6 +9,12 @@ import { useHistory } from 'react-router-dom'
 import DataGridList from '../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
 import exportedSwal from '../../utils/swal'
+
+import exportedAPIWork from '../../utils/api/Work'
+import { APIWorkexperience_data } from '../../model/Workexperience'
+import { useQuery, useQueryClient } from 'react-query'
+import { RootState } from '../../store/ConfigureStore'
+import LoadingData from '../../components/LoadingData'
 
 function Workexp() {
     return (
@@ -19,13 +25,18 @@ function Workexp() {
 
 function Pages() {
 
+    const queryClient = useQueryClient()
+
+    const user = useSelector((state: RootState) => state.user.data)
+
+    const { data, isLoading } = useQuery<APIWorkexperience_data, Error>('workexperience-data', async () => exportedAPIWork.getWork(user.token))
 
     const columns: GridColDef[] = [
-        { field: 'workplace', headerName: 'สถานที่ทำงาน' },
-        { field: 'position', headerName: 'ตำแหน่ง' },
-        { field: 'salary', headerName: 'เงินเดือน' },
-        { field: 'duration', headerName: 'ระยะเวลา' },
-        { field: 'note', headerName: 'เหตุผลที่ออก' },
+        { field: 'workplace', headerName: 'สถานที่ทำงาน' , width : 200 },
+        { field: 'position', headerName: 'ตำแหน่ง', width : 200 },
+        { field: 'salary', headerName: 'เงินเดือน' , width : 200},
+        { field: 'duration', headerName: 'ระยะเวลา', width : 200 },
+        { field: 'note', headerName: 'เหตุผลที่ออก', width : 200 },
         {
             field: "delete",
             headerName: "",
@@ -34,8 +45,9 @@ function Pages() {
             renderCell: (params) => {
                 return (
                     <Button
-                        onClick={() => { }}
+                        onClick={() => actionDeleteWorkexp(params.row.id)}
                         variant="contained"
+                        color='secondary'
                     >
                         Delete
                     </Button>
@@ -48,11 +60,45 @@ function Pages() {
     const dispatch = useDispatch()
     const [title] = useState<string>("ประสบการณ์ทํางาน")
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        //const data = new FormData(event.currentTarget);
+        const data = new FormData(event.currentTarget);
+
+        if(!data.get('workplace') || !data.get('position') || !data.get('salary') || !data.get('duration') || !data.get('note')){
+            exportedSwal.actionInfo(`กรุณากรอกข้อมูลให้ครบ !`)
+            return
+        }
+
+        let dataPost = {
+            workplace: data.get('workplace'),
+            position: data.get('position'),
+            salary: data.get('salary'),
+            duration: data.get('duration'),
+            note: data.get('note'),
+        }
+
+        let resData = await exportedAPIWork.createWork(dataPost, user.token)
+
+        if (resData.bypass) {
+            queryClient.invalidateQueries('workexperience-data')
+            exportedSwal.actionSuccess(`เพิ่มข้อมูลเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(resData.message)
+        }
 
         exportedSwal.actionSuccess(`เพิ่มข้อมูล ประสบการณ์ทำงาน เรียบร้อย !`)
+    }
+
+    const actionDeleteWorkexp = async (id: number) => {
+
+        let data = await exportedAPIWork.deleteWork(id , user.token)
+
+        if (data.bypass) {
+            queryClient.invalidateQueries('workexperience-data')
+            exportedSwal.actionSuccess(`ลบข้อมูลเรียบร้อย !`)
+        } else {
+            exportedSwal.actionInfo(`ลบข้อมูลไม่สำเร็จ !`)
+        }
 
     }
 
@@ -145,7 +191,16 @@ function Pages() {
                     </Toolbar>
                 </AppBar>
                 <Container >
-                    <DataGridList columns={columns} model={[]} />
+                    {
+                        isLoading ? 
+
+                        <LoadingData />
+
+                        :
+
+                        <DataGridList columns={columns} model={data?.data} />
+                    }
+                   
                 </Container>
             </Paper>
         </>
