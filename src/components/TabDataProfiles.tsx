@@ -24,8 +24,8 @@ function TabDataProfiles() {
     return (
         <Box sx={{ flexGrow: 1, maxWidth: 300 }}>
             {
-                menu.map(({ name, icon , link }) => (
-                    <List>
+                menu.map(({ name, icon , link } , key ) => (
+                    <List key={key}>
                         <ListItem
                             disablePadding
                             secondaryAction={

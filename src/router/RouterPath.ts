@@ -1,6 +1,6 @@
 export const routerPathProtectedUser =  {
     Job : '/job',
-    JobApp : '/job/app',
+    JobApp : '/job',
     Profile : '/profile',
     Education : '/education',
     Training : '/training',
