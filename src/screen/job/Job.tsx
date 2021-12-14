@@ -1,13 +1,19 @@
-import { AppBar, Paper, Toolbar, Grid, Typography, Container, Button, Box } from '@mui/material'
+import { AppBar, Paper, Toolbar, Grid, Typography, Container, Button, Box, Alert, AlertTitle } from '@mui/material'
 //import { GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Paperbase from '../../components/template/Paperbase'
-import { Topic } from '../../model/Topic';
+import { APITopic_data } from '../../model/Topic';
 import { routerPathProtectedUser } from '../../router/RouterPath';
 import { setBreadCms } from '../../store/reducer/Breadcrumbs';
 import { setTitle } from '../../store/reducer/TitleHeader';
+
+
+import { useQuery } from 'react-query'
+import exportedAPITopic from '../../utils/api/Topic'
+import { RootState } from '../../store/ConfigureStore'
+import LoadingData from '../../components/LoadingData'
 
 function Index() {
 
@@ -19,10 +25,16 @@ function Index() {
 
 function Pages() {
 
+    const [dateJob] = useState<Date>(new Date());
+
     const dispatch = useDispatch()
     const history = useHistory()
     const [title] = useState<string>("ประกาศรับสมัครงาน")
-    
+
+    const user = useSelector((state: RootState) => state.user.data)
+
+    const { data, isLoading } = useQuery<APITopic_data, Error>('job-data', async () => exportedAPITopic.getIsOpenJob(user.token))
+
     useEffect(() => {
         dispatch(setTitle(title))
         dispatch(setBreadCms([
@@ -31,8 +43,6 @@ function Pages() {
         ]))
         // eslint-disable-next-line 
     }, [])
-
-    const [model] = useState<Topic>({ id: 1, name: "test01", time: new Date() , round : 1})
 
     return (
         <>
@@ -53,17 +63,35 @@ function Pages() {
                 </AppBar>
                 <Container >
                     {
-                        model ?
-                            <Box sx={{ m : 1 }}>
-                                <Typography variant="h6" >รับสมัครบุคคลเข้าทำงานตามโครงการยกระดับเศรษฐกิจและสังคมรายตำบลแบบบูรณาการ รอบที่ 8</Typography>
-                                <Typography variant="subtitle1" >ปิดรับสมัคร : 12 / 2 / 2564</Typography>
-                                <div style={{paddingBottom : '2%'}}></div>
-                                <Button onClick={() => history.push(routerPathProtectedUser.JobApp)} variant="contained"  >ยื่นใบสมัคร</Button>
-                                <div style={{paddingBottom : '2%'}}></div>
-                            </Box>
+                        isLoading
+                            ?
+
+                            <LoadingData />
+
                             :
-                            <></>
+
+                            <>
+                                {
+                                    data?.data ?
+                                        <Box sx={{ m: 1 , mt : 3 }}>
+                                            <Typography variant="h6" >{data.data.name}</Typography>
+                                            <Typography variant="subtitle1" >ปิดรับสมัคร : {data.data.time}</Typography>
+                                            <div style={{ paddingBottom: '2%' }}></div>
+                                            <Button onClick={() => history.push(`${routerPathProtectedUser.JobApp}/${data.data.id}`)} variant="contained"  >ยื่นใบสมัคร</Button>
+                                            <div style={{ paddingBottom: '2%' }}></div>
+                                        </Box>
+                                        :
+                                        <>
+                                            <Alert sx={{m : 2}} severity="warning">
+                                                <AlertTitle>ไม่พบการประกาศรับสมัครงานในขณะนี้</AlertTitle>
+                                                ค้นหาเมื่อ — <strong>{dateJob.getDate()}-{dateJob.getMonth() + 1}-{dateJob.getFullYear()} {dateJob.getHours()}:{dateJob.getMinutes()}:{dateJob.getSeconds()}</strong>
+                                            </Alert>
+                                        </>
+                                }
+
+                            </>
                     }
+
                 </Container>
             </Paper>
         </>

@@ -112,7 +112,6 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
-
     return (
         <>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
@@ -128,7 +127,7 @@ function Pages() {
                                 <Typography >{title}</Typography>
                             </Grid>
                             <Grid item>
-                                <Button onClick={() => history.goBack()} variant="contained" sx={{ mr: 1 }}>ย้อนกลับไปยังโปรไฟล์</Button>
+                                <Button onClick={() => history.goBack()} variant="contained" sx={{ mr: 1 }}>ย้อนกลับ</Button>
                             </Grid>
                         </Grid>
                     </Toolbar>

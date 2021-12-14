@@ -79,8 +79,6 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
-    console.log(data?.data)
-
     return (
         <>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
@@ -120,28 +118,51 @@ function Pages() {
                                         <Grid item xs={12} sm={12} md={4} lg={4} >
                                             <FormControl fullWidth>
                                                 <InputLabel id="demo-simple-select-label">คำนำหน้า</InputLabel>
-                                                <Select
-                                                    value={data?.data ? data?.data.title : titleName}
-                                                    label="คำนำหน้า"
-                                                    onChange={handleChange}
-                                                >{
-                                                        ["นาย", "นาง", "นางสาว"].map((item, index) => (
-                                                            <MenuItem key={index} value={item}>{item}</MenuItem>
-                                                        ))
-                                                    }
-                                                </Select>
+
+                                                {
+                                                    data?.data.title ?
+
+                                                        <Select
+                                                            value={titleName ? titleName : data?.data.title}
+                                                            label="คำนำหน้า"
+                                                            onChange={handleChange}
+                                                        >{
+                                                                ["นาย", "นาง", "นางสาว"].map((item, index) => (
+                                                                    <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                                ))
+                                                            }
+                                                        </Select>
+
+                                                        :
+
+                                                        <Select
+                                                            value={titleName}
+                                                            label="คำนำหน้า"
+                                                            onChange={handleChange}
+                                                        >{
+                                                                ["นาย", "นาง", "นางสาว"].map((item, index) => (
+                                                                    <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                                ))
+                                                            }
+                                                        </Select>
+
+
+
+
+                                                }
+
                                             </FormControl>
                                         </Grid>
                                         {
                                             [
-                                                { name: "firstname", label: "ชื่อจริง", value: data?.data  ? data.data.firstname : ""   },
-                                                { name: "surname", label: "ชื่อนามสกุล" , value: data?.data  ? data.data.surname : "" },
-                                                { name: "birthday", label: "วันเกิด", ex: "ตัวอย่าง วัน-เดือน-ปี | 01-01-2539", value: data?.data  ? data.data.birthday : ""  },
-                                                { name: "email", label: "email" , value: data?.data  ? data.data.email : "" },
-                                                { name: "nationality", label: "สัญชาติ" , value:  data?.data  ? data.data.nationality: "" },
-                                                { name: "religion", label: "ศาสนา" , value: data?.data  ? data.data.religion : "" },
-                                                { name: "tel", label: "เบอร์"  , value: data?.data  ? data.data.tel : "" },
-                                                { name: "status", label: "สถานภาพ" , value: data?.data  ? data.data.status : "" },
+                                                { name: "firstname", label: "ชื่อจริง", value: data?.data ? data.data.firstname : "" },
+                                                { name: "surname", label: "ชื่อนามสกุล", value: data?.data ? data.data.surname : "" },
+                                                { name: "birthday", label: "วันเกิด", ex: "ตัวอย่าง วัน-เดือน-ปี | 01-01-2539", value: data?.data ? data.data.birthday : "" },
+                                                { name: "email", label: "email", value: data?.data ? data.data.email : "" },
+                                                { name: "nationality", label: "สัญชาติ", value: data?.data ? data.data.nationality : "" },
+                                                { name: "religion", label: "ศาสนา", value: data?.data ? data.data.religion : "" },
+                                                { name: "tel", label: "เบอร์", value: data?.data ? data.data.tel : "" },
+                                                { name: "status", label: "สถานภาพ", value: data?.data ? data.data.status : "" },
                                             ].map(({ name, label, ex, value }, index) => (
                                                 <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
                                                     <TextField
@@ -161,7 +182,7 @@ function Pages() {
                                                 fullWidth
                                                 name={"address_current"}
                                                 label={"ที่อยู่ปัจจุบัน"}
-                                                defaultValue={data?.data  ? data.data.address_current : ""}
+                                                defaultValue={data?.data ? data.data.address_current : ""}
                                                 rows={3}
                                             />
                                         </Grid>
@@ -171,7 +192,7 @@ function Pages() {
                                                 fullWidth
                                                 name={"address_home"}
                                                 label={"ที่อยู่ตามทะเบียนบ้าน"}
-                                                defaultValue={data?.data  ? data.data.address_home : ""}
+                                                defaultValue={data?.data ? data.data.address_home : ""}
                                                 rows={3}
                                             />
                                         </Grid>
@@ -182,9 +203,9 @@ function Pages() {
                                     <Grid container spacing={2} columns={12} >
                                         {
                                             [
-                                                { name: "job_name", label: "ชื่อตำแหน่ง" , value : data?.data  ? data.data.job_name : "" },
-                                                { name: "address_job", label: "ที่ทำงานปัจจุบัน" , value : data?.data  ? data.data.address_job : "" },
-                                            ].map(({ name, label , value }, index) => (
+                                                { name: "job_name", label: "ชื่อตำแหน่ง", value: data?.data ? data.data.job_name : "" },
+                                                { name: "address_job", label: "ที่ทำงานปัจจุบัน", value: data?.data ? data.data.address_job : "" },
+                                            ].map(({ name, label, value }, index) => (
                                                 <Grid key={index} item xs={12} sm={12} md={4} lg={4} >
                                                     <TextField
                                                         fullWidth
@@ -201,7 +222,7 @@ function Pages() {
                                                 fullWidth
                                                 name={"work_detail"}
                                                 label={"รายละเอียดงานที่ทำปัจจุบัน"}
-                                                defaultValue={data?.data  ? data.data.work_detail : ""}
+                                                defaultValue={data?.data ? data.data.work_detail : ""}
                                                 rows={3}
                                             />
                                         </Grid>

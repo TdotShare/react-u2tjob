@@ -14,6 +14,26 @@ const getTopicAll = async (token : String) => {
     return res.data
 }
 
+const getIsOpenJob = async (token : String) => {
+    const res = await axios.get(`${systemConfig.API}/topic/` , {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    return res.data
+}
+
+const getJob = async (id : number , token : String) => {
+    const res = await axios.get(`${systemConfig.API}/applyjob/${id}` , {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    return res.data
+}
+
 
 const getTopic = async (id : number , token : String) => {
     const res = await axios.get(`${systemConfig.API}/admin/topic/view/${id}` , {
@@ -59,6 +79,8 @@ const deleteTopic = async (id : number , token : String) => {
 
 
 const exportedAPITopic = {
+    getJob,
+    getIsOpenJob,
     getTopicAll,
     getTopic,
     createTopic,

@@ -24,7 +24,7 @@ function ProtectedRoutesUser() {
   return (
     <>
       <Route exact path={`${routerPathProtectedUser.Job}`} component={JobScreen} />
-      <Route exact path={`${routerPathProtectedUser.JobApp}`} component={ApplicationScreen} />
+      <Route exact path={`${routerPathProtectedUser.JobApp}/:id`} component={ApplicationScreen} />
       <Route exact path={`${routerPathProtectedUser.Profile}`} component={ProfileScreen} />
       <Route exact path={`${routerPathProtectedUser.Education}`} component={Education} />
       <Route exact path={`${routerPathProtectedUser.Workexperience}`} component={Workexp} />
