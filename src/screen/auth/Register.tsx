@@ -53,6 +53,18 @@ export default function Register() {
 
     return (
         <ThemeProvider theme={createTheme({
+            palette: {
+                primary: {
+                  light: '#af52bf',
+                  main: '#9c27b0',
+                  dark: '#6d1b7b',
+                },
+                secondary :{
+                  light: '#f73378',
+                  main: '#f50057',
+                  dark: '#ab003c',
+                }
+            },
             typography: {
                 fontFamily: "'Mitr', sans-serif;",
             }
@@ -70,8 +82,9 @@ export default function Register() {
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
-                        {systemConfig.NameFull}
+                    <Typography sx={{'textAlign' : 'center'}} component="h1" variant="h5">
+                        {systemConfig.NameFull} <br />
+                        ( สมัครสมาชิก )
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField

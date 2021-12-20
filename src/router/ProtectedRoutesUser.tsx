@@ -1,24 +1,27 @@
-import { Route, useHistory } from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
 import Education from '../screen/education/Education'
 import JobScreen from '../screen/job/Job'
 import ApplicationScreen from '../screen/job/Application'
 import ProfileScreen from '../screen/profile/Profile'
 import Training from '../screen/training/Training'
 import Workexp from '../screen/workexp/Workexp'
-import { routerPathProtectedAdmin, routerPathProtectedUser } from './RouterPath'
+import { routerPathPublic , routerPathProtectedAdmin, routerPathProtectedUser } from './RouterPath'
 import { useSelector } from 'react-redux'
 import { RootState } from '../store/ConfigureStore'
 import exportedSwal from '../utils/swal'
 
 function ProtectedRoutesUser() {
-
-  const history = useHistory()
   
   const user = useSelector((state: RootState) => state.user.data)
+  const auth = useSelector((state: RootState) => state.user.auth)
+
+  if(!auth){
+    return <Redirect to={routerPathPublic.Login} />
+  }
 
   if(!user.idcard){
     exportedSwal.actionInfo("ผู้ดูแลระบบไม่สามารถใช้งานเมนู นี้ได้ !")
-    history.replace(routerPathProtectedAdmin.Dashboard)
+    return <Redirect to={routerPathProtectedAdmin.Dashboard} />
   }
 
   return (

@@ -14,6 +14,16 @@ const getProfile = async (token : String) => {
     return res.data
 }
 
+const reSetPassowrd = async  (data : any , token : String) => {
+    const res = await axios.post<APIResponse_data>(`${systemConfig.API}/user/resetpassword`, data , {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    return res.data
+}
+
 const updateProfile = async (data : any , token : String) => {
     const res = await axios.post<APIResponse_data>(`${systemConfig.API}/user/update`, data , {
         headers: {
@@ -27,6 +37,7 @@ const updateProfile = async (data : any , token : String) => {
 const exportedAPIProfile = {
     getProfile,
     updateProfile,
+    reSetPassowrd
 };
 
 export default exportedAPIProfile;

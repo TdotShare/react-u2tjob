@@ -97,7 +97,7 @@ function Pages() {
                         </Button>
                         <div style={{ margin: 5 }}></div>
                         <Button
-                            onClick={() => { }}
+                            onClick={() => history.push(`${routerPathProtectedAdmin.TopicChecked}/${params.row.id}`)  }
                             variant="contained"
                         >
                             ตรวจสอบผู้สมัคร

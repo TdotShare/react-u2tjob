@@ -14,6 +14,8 @@ import { useQuery } from 'react-query'
 import exportedAPITopic from '../../utils/api/Topic'
 import { RootState } from '../../store/ConfigureStore'
 import LoadingData from '../../components/LoadingData'
+import BookIcon from '@mui/icons-material/Book';
+import { systemConfig } from '../../config/System';
 
 function Index() {
 
@@ -58,12 +60,16 @@ function Pages() {
                             <Grid item xs>
                                 <Typography >{title}</Typography>
                             </Grid>
+                            <Grid item >
+                                <Button onClick={() => window.open(`${systemConfig.API}/manual` , '_blank') } variant="contained" startIcon={<BookIcon/>} sx={{ mr: 1 }}>คู่มือการใช้งาน</Button>
+                            </Grid>
                         </Grid>
                     </Toolbar>
                 </AppBar>
                 <Container >
                     {
                         isLoading
+
                             ?
 
                             <LoadingData />

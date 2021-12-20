@@ -18,8 +18,23 @@ import { addUser, setLoginSuccess } from '../../store/reducer/User';
 import { useDispatch } from 'react-redux';
 import { addAdmin } from '../../store/reducer/Admin';
 
+import BookIcon from '@mui/icons-material/Book';
+import LoginIcon from '@mui/icons-material/Login';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 const theme = createTheme({
+    palette: {
+        primary: {
+          light: '#af52bf',
+          main: '#9c27b0',
+          dark: '#6d1b7b',
+        },
+        secondary :{
+          light: '#f73378',
+          main: '#f50057',
+          dark: '#ab003c',
+        }
+    },
     typography: {
         fontFamily: "'Mitr', sans-serif;",
     }
@@ -106,7 +121,7 @@ export default function Login() {
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography sx={{'textAlign' : 'center'}} component="h1" variant="h5">
                         {systemConfig.NameFull}
                     </Typography>
 
@@ -134,6 +149,7 @@ export default function Login() {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            startIcon={<LoginIcon/>}
                             sx={{ mt: 3, mb: 2 }}
                         >
                             เข้าสู่ระบบ
@@ -143,9 +159,21 @@ export default function Login() {
                         onClick={() => history.push(routerPathPublic.Register)}
                         type="submit"
                         fullWidth
+                        startIcon={<AppRegistrationIcon/>}
                         variant="contained"
                     >
                         สมัครสมาชิก
+                    </Button>
+                    <Button
+                        sx={{mt : 2}}
+                        onClick={() => window.open(`${systemConfig.API}/manual` , '_blank') }
+                        type="submit"
+                        color='secondary'
+                        fullWidth
+                        variant="contained"
+                        startIcon={<BookIcon/>}
+                    >
+                        คู่มือการใช้งาน
                     </Button>
                 </Box>
             </Container>

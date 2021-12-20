@@ -85,7 +85,7 @@ function Pages() {
                 return (
                     <>
                     <Button
-                        onClick={() => history.push("") }
+                        onClick={() => history.push(`${routerPathProtectedAdmin.Account}/${params.row.id}`) }
                         variant="contained"
                     >
                         ดูข้อมูลผู้ใช้งาน

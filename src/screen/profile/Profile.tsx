@@ -35,6 +35,30 @@ function Pages() {
     const handleChange = (event: SelectChangeEvent) => {
         setTitleName(event.target.value);
     };
+    
+    const resetPassowrdUser = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        if( !data.get('password_new') || !data.get('password') ){
+            exportedSwal.actionInfo(`กรุณากรอกข้อมูลการเปลี่ยนรหัสผ่านให้ครบ !`)
+            return
+        }
+
+        
+        let passwordData = {
+            "password": data.get('password'),
+            "password_new": data.get('password_new'),
+        }
+
+        let resData = await exportedAPIProfile.reSetPassowrd(passwordData, user.token)
+
+        if (resData.bypass) {
+            exportedSwal.actionSuccess(`แก้ไขรหัสผ่านเรียบร้อย`)
+        } else {
+            exportedSwal.actionInfo(resData.message)
+        }
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -233,7 +257,51 @@ function Pages() {
                                     </Button>
                                 </>
                         }
+                    </Box>
+                </Container>
+            </Paper>
 
+            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' , mt: 2 }}>
+                <AppBar
+                    position="static"
+                    color="default"
+                    elevation={0}
+                    sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+                >
+                    <Toolbar>
+                        <Grid container spacing={2} alignItems="center">
+                            <Grid item xs>
+                                <Typography >เปลี่ยนรหัสผ่าน</Typography>
+                            </Grid>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
+                <Container >
+                    <Box component="form" onSubmit={resetPassowrdUser}
+                        noValidate
+                        sx={{ p: '1%', mt: 2 }}
+
+                    >
+                        <Grid container spacing={2} columns={12} >
+                            {
+                                [
+                                    { name: "password", label: "รหัสผ่านเดิม" },
+                                    { name: "password_new", label: "รหัสผ่านใหม่", },
+                                ].map(({ name, label }, index) => (
+                                    <Grid key={index} item xs={12} sm={12} md={6} lg={6} >
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            name={name}
+                                            label={label}
+                                        />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                        <Button type="submit" fullWidth variant="contained" color='secondary' sx={{ mt: 3, mb: 2 }} >
+                            เปลี่ยนรหัสผ่าน
+                        </Button>
                     </Box>
                 </Container>
             </Paper>

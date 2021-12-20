@@ -63,9 +63,9 @@ function Pages() {
                 );
             }
         },
-        { field: 'major', headerName: 'สาขาวิชา' },
+        { field: 'major', headerName: 'สาขาวิชา' , width : 200  },
         { field: 'gpa', headerName: 'gpa' },
-        { field: 'university', headerName: 'จบจาก' },
+        { field: 'university', headerName: 'จบจาก' , width : 200  },
         { field: 'timeend', headerName: 'ระยะเวลา' },
         {
             field: "delete",

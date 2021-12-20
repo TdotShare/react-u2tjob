@@ -1,3 +1,7 @@
+import { Education } from "./Education"
+import { Training } from "./Training"
+import { Workexperience } from "./Workexperience"
+
 export interface Profile {
     id?: number;
     user_id?: number;
@@ -20,6 +24,14 @@ export interface Profile {
 export type APIProfile_data = {
     bypass: boolean,
     data: Profile,
+    status : string,
+    message : string
+}
+
+
+export type APIProfileView_data = {
+    bypass: boolean,
+    data: { profile ?: Profile, education : Education  , workexperience : Workexperience , training : Training },
     status : string,
     message : string
 }

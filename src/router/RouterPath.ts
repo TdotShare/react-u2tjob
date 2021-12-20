@@ -11,6 +11,7 @@ export const routerPathProtectedAdmin =  {
     Dashboard : '/dashboard',
     Topic : '/topic',
     TopicUpdate : '/topic/update',
+    TopicChecked : '/topic/checked',
     Account : '/account',
 }
 
