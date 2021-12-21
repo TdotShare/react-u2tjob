@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import UploadIcon from '@mui/icons-material/Upload';
 import PhotoIcon from '@mui/icons-material/Photo';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import exportedSwal from '../utils/swal';
 
 
 
 type AppPros = {
     title : string,
     shotnamefile : string,
-    fileData :  ( data :File ) => void,
+    fileData :  ( data :File | undefined ) => void,
     setphoto : boolean,
     files? : File
     urlData : () => void,
@@ -26,9 +27,13 @@ function InputUploadFile(props: AppPros) {
         const target = e.target as HTMLInputElement;
         const file: File = (target.files as FileList)[0];
 
-        props.fileData(file)
 
-
+        if(file.type === "image/png" || file.type === "image/jpeg"){
+            props.fileData(file)
+        }else{
+            exportedSwal.actionInfo("กรุณาแนบไฟล์รูปภาพ เฉพาะนามสกุล png , jpage  ")
+            props.fileData(undefined)
+        }
     }
 
     return (
