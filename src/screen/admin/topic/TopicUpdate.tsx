@@ -28,12 +28,13 @@ function Pages() {
     const admin = useSelector((state: RootState) => state.admin.data)
     const { id }: any = useParams();
 
-    const { data, isLoading } = useQuery<APITopic_data, Error>('admin-topic-view', async () => exportedAPITopic.getTopic(id, admin.token))
+    const { data, isLoading  } = useQuery<APITopic_data, Error>(`admin-topic-view-${id}`, async () => exportedAPITopic.getTopic(id, admin.token))
 
     const dispatch = useDispatch()
     const [title] = useState<string>(`แก้ไขข้อมูล id - ${id}`)
     const [timeJob, setTimeJob] = useState<Date | null>(new Date())
     const [isSelect, setIsSelect] = useState<string>('')
+    const [isShow, setIsShow] = useState<string>('')
 
     useEffect(() => {
         dispatch(setTitle(title))
@@ -65,7 +66,8 @@ function Pages() {
             "name": formData.get('name'),
             "round": formData.get('round'),
             "status": isSelect === '' ? null : isSelect,
-            'time': `${timeJob?.getFullYear()}-${timeJob!.getMonth() + 1}-${timeJob?.getDate()}`
+            'time': `${timeJob?.getFullYear()}-${timeJob!.getMonth() + 1}-${timeJob?.getDate()}`,
+            'isshow' : isShow === '' ? null : isShow
         }
 
         let resData = await exportedAPITopic.updateTopic(dataPost, admin.token)
@@ -141,7 +143,22 @@ function Pages() {
                                                     label="เลือกสถานะการใช้งาน"
                                                     onChange={setOpenJob}
                                                 >{
-                                                        [{ name: "เปิดการใช้งาน", value: 1 }, { name: "ซ่อน", value: 2 }].map((item, index) => (
+                                                        [{ name: "เปิดการใช้งาน", value: 1 }, { name: "ปิดการใช้งาน", value: 2 }].map((item, index) => (
+                                                            <MenuItem key={index} value={item.value}>{item.name}</MenuItem>
+                                                        ))
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={12} md={12} lg={12} >
+                                            <FormControl fullWidth>
+                                                <InputLabel >เลือกสถานะเผยแพร่</InputLabel>
+                                                <Select
+                                                    value={isShow}
+                                                    label="เลือกสถานะเผยแพร่"
+                                                    onChange={(event: SelectChangeEvent) => setIsShow(event.target.value)}
+                                                >{
+                                                        [{ name: "เผยแพร่", value: 1 }, { name: "ซ่อน", value: 2 }].map((item, index) => (
                                                             <MenuItem key={index} value={item.value}>{item.name}</MenuItem>
                                                         ))
                                                     }

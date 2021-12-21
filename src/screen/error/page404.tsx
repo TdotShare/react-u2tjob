@@ -2,11 +2,11 @@ import { Box, Grid, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Paperbase from '../../components/template/Paperbase'
-import { routerPathProtectedAdmin , routerPathProtectedUser } from '../../router/RouterPath'
+import { routerPathProtectedAdmin , routerPathProtectedUser, routerPathPublic } from '../../router/RouterPath'
 import { setBreadCms } from '../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../store/reducer/TitleHeader'
 import WarningIcon from '@mui/icons-material/Warning';
-import { Link  } from "react-router-dom";
+import { Link, Redirect  } from "react-router-dom";
 import { RootState } from '../../store/ConfigureStore'
 
 function Page404() {
@@ -33,6 +33,13 @@ function Pages() {
         ]))
         // eslint-disable-next-line 
     }, [])
+
+
+    const auth = useSelector((state: RootState) => state.user.auth)
+  
+    if(!auth){
+      return <Redirect to={routerPathPublic.Login} />
+    }
 
 
     return (

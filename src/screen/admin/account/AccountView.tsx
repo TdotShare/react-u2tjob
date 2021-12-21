@@ -74,7 +74,7 @@ function Pages() {
 
 
     const admin = useSelector((state: RootState) => state.admin.data)
-    const { data, isLoading, isError } = useQuery<APIProfileView_data, Error>('account-view', async () => exportedAPIAccount.getAccount(id, admin.token))
+    const { data, isLoading, isError } = useQuery<APIProfileView_data, Error>(`account-view-${id}`, async () => exportedAPIAccount.getAccount(id, admin.token))
 
     const dispatch = useDispatch()
     const [title] = useState<string>(`ดูข้อมูลผู้ใช้งาน - ${id}`)

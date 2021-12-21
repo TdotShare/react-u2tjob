@@ -74,7 +74,6 @@ function Pages() {
         if (nameTambonTwoChecked) postData.append("work_area_two", nameTambonTwoChecked)
         if (typeJobChecked) postData.append("type_job", typeJobChecked)
 
-
         if (evid0) postData.append("evid0", evid0!)
         if (evid1) postData.append("evid1", evid1!)
         if (evid2) postData.append("evid2", evid2!)

@@ -38,17 +38,17 @@ function Pages() {
     
     const resetPassowrdUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const formdata = new FormData(event.currentTarget);
 
-        if( !data.get('password_new') || !data.get('password') ){
+        if( !formdata.get('password_new') || !formdata.get('password') ){
             exportedSwal.actionInfo(`กรุณากรอกข้อมูลการเปลี่ยนรหัสผ่านให้ครบ !`)
             return
         }
 
         
         let passwordData = {
-            "password": data.get('password'),
-            "password_new": data.get('password_new'),
+            "password": formdata.get('password'),
+            "password_new": formdata.get('password_new'),
         }
 
         let resData = await exportedAPIProfile.reSetPassowrd(passwordData, user.token)
@@ -62,23 +62,23 @@ function Pages() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        const formdata = new FormData(event.currentTarget);
 
         let profileData = {
             "title": titleName,
-            "firstname": data.get('firstname'),
-            "surname": data.get('surname'),
-            "birthday": data.get('birthday'),
-            "email": data.get('email'),
-            "nationality": data.get('nationality'),
-            "religion": data.get('religion'),
-            "tel": data.get('tel'),
-            "status": data.get('status'),
-            "address_current": data.get('address_current'),
-            "address_home": data.get('address_home'),
-            "job_name": data.get('job_name'),
-            "address_job": data.get('address_job'),
-            "work_detail": data.get('work_detail'),
+            "firstname": formdata.get('firstname'),
+            "surname": formdata.get('surname'),
+            "birthday": formdata.get('birthday'),
+            "email": formdata.get('email'),
+            "nationality": formdata.get('nationality'),
+            "religion": formdata.get('religion'),
+            "tel": formdata.get('tel'),
+            "status": formdata.get('status'),
+            "address_current": formdata.get('address_current'),
+            "address_home": formdata.get('address_home'),
+            "job_name": formdata.get('job_name'),
+            "address_job": formdata.get('address_job'),
+            "work_detail": formdata.get('work_detail'),
         }
 
 
@@ -102,6 +102,9 @@ function Pages() {
         ]))
         // eslint-disable-next-line 
     }, [])
+
+
+    console.log(data?.data)
 
     return (
         <>
@@ -144,7 +147,7 @@ function Pages() {
                                                 <InputLabel id="demo-simple-select-label">คำนำหน้า</InputLabel>
 
                                                 {
-                                                    data?.data.title ?
+                                                    data?.data?.title  ?
 
                                                         <Select
                                                             value={titleName ? titleName : data?.data.title}

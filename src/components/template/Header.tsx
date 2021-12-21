@@ -14,12 +14,15 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Breadcrumbs } from '@mui/material';
-import { routerPathPublic } from '../../router/RouterPath';
-import { Link, useHistory  } from "react-router-dom";
+//import { routerPathPublic } from '../../router/RouterPath';
+import { Link  } from "react-router-dom";
 import { RootState } from '../../store/ConfigureStore'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLoginfail, deleteUser } from '../../store/reducer/User'
 import { deleteAdmin } from '../../store/reducer/Admin'
+import { useQueryClient } from 'react-query'
+import exportedSwal from '../../utils/swal';
+import { systemConfig } from '../../config/System';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -29,7 +32,10 @@ interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
 
-  const history = useHistory()
+  //const history = useHistory()
+
+  const queryClient = useQueryClient()
+  
 
   const breadcrumbs = useSelector((state: RootState) => state.breadcrumbs.item)
   const titleheader = useSelector((state: RootState) => state.titleheader.value)
@@ -39,10 +45,16 @@ export default function Header(props: HeaderProps) {
   const dispatch = useDispatch()
 
   const actionLogout = () => {
+    queryClient.invalidateQueries()
     dispatch(deleteAdmin())
     dispatch(setLoginfail())
     dispatch(deleteUser())
-    history.replace(routerPathPublic.Login)
+
+    exportedSwal.actionSuccess("ทำการออกจากระบบเรียบร้อย กรุณารอสักครู่ ระบบจะพาคุณไปยังหน้า Login")
+    setTimeout(() => {
+      window.close();
+      window.open(`${systemConfig.HOST}/login`)
+    }, 1000);
   }
 
   return (

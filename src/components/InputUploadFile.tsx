@@ -49,7 +49,7 @@ function InputUploadFile(props: AppPros) {
                                 'Upload'
                             }
                             <input
-                                accept="image/*"
+                                accept="image/png,image/jpeg"
                                 onChange={handleChange}
                                 type="file"
                                 hidden

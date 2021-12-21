@@ -17,7 +17,6 @@ import { RootState } from '../../../store/ConfigureStore'
 import LoadingData from '../../../components/LoadingData'
 
 
-
 function Topic() {
     return (
         <Paperbase children={Pages()} />
@@ -62,7 +61,6 @@ function Pages() {
 
     }
 
-
     const actionDelete = async (id: number) => {
 
         let resData = await exportedAPITopic.deleteTopic(id, admin.token)
@@ -77,15 +75,11 @@ function Pages() {
     }
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'ชื่องาน', width: 400 },
-        { field: 'round', headerName: 'รอบ' },
-        { field: 'status', headerName: 'สถานะการใช้งาน', renderCell: (params) => { return (<Typography>{params.row.status === 1 ? "เปิดการใช้งาน" : "ซ่อน"}</Typography>) } , width : 150 },
-        { field: 'time', headerName: 'ปิดรับสมัคร', width: 200 },
         {
             field: "actions",
             headerName: "Actions",
             sortable: false,
-            width: 500,
+            width: 350,
             renderCell: (params) => {
                 return (
                     <>
@@ -114,6 +108,13 @@ function Pages() {
                 );
             }
         },
+        { field: 'id', headerName: 'IDTopic', width: 100 },
+        { field: 'name', headerName: 'ชื่องาน', width: 400 },
+        { field: 'round', headerName: 'รอบ' },
+        { field: 'status', headerName: 'สถานะการใช้งาน', renderCell: (params) => { return (<Typography>{params.row.status === 1 ? "เปิดการใช้งาน" : "ซ่อน"}</Typography>) } , width : 150 },
+        { field: 'isshow', headerName: 'สถานะการเผยแพร่', renderCell: (params) => { return (<Typography>{params.row.isshow === 1 ? "เผยแพร่" : "ซ่อน"}</Typography>) } , width : 150 },
+        { field: 'time', headerName: 'ปิดรับสมัคร', width: 200 },
+
     ];
 
     useEffect(() => {

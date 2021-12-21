@@ -2,6 +2,7 @@ export interface Topic {
     id : number,
     name: string;
     round : number;
+    isshow : number;
     time: Date;
 }
 

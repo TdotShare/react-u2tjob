@@ -17,6 +17,7 @@ import { systemConfig } from '../../../config/System'
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import exportedSwal from '../../../utils/swal'
 
 function TopicUpdate() {
     return (
@@ -35,7 +36,7 @@ function Pages() {
     const [title] = useState<string>(`ตรวจสอบผูัสมัคร id - ${id}`)
 
 
-    const { data, isLoading } = useQuery<APIChkecedJob_data, Error>('checked-data', async () => exportedAPITopic.getApplyUserAll(id, admin.token))
+    const { data, isLoading } = useQuery<APIChkecedJob_data, Error>(`checked-data-${id}`, async () => exportedAPITopic.getApplyUserAll(id, admin.token))
 
     useEffect(() => {
         dispatch(setTitle(title))
@@ -54,9 +55,14 @@ function Pages() {
     }
 
     const actionAllDownload = () =>{
-        data?.data.forEach(el => {
-            window.open(`${systemConfig.API}/pdf_download_qgadwh/${el.id}`, '_blank')
-        });
+        if(data?.data.length !== 0){
+            data?.data.forEach(el => {
+                window.open(`${systemConfig.API}/pdf_download_qgadwh/${el.id}`, '_blank')
+            });
+        }else{
+            exportedSwal.actionInfo(`ไม่พบข้อมูล !`)
+        }
+
     }
     const columns: GridColDef[] = [
         {
