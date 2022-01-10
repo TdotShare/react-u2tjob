@@ -6,3 +6,5 @@ export const systemConfig  =  {
     NameInit : `IRD - U2TJob`,
     BaseRouter : process.env.NODE_ENV !== 'production' ? "/" : "/u2tjob/" 
 }
+
+//"homepage": "https://mis-ird.rmuti.ac.th/u2tjob",

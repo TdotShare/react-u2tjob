@@ -1,28 +1,23 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
-//import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-//import HelpIcon from '@mui/icons-material/Help';
 import IconButton from '@mui/material/IconButton';
-//import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-//import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Breadcrumbs } from '@mui/material';
-//import { routerPathPublic } from '../../router/RouterPath';
 import { Link  } from "react-router-dom";
 import { RootState } from '../../store/ConfigureStore'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLoginfail, deleteUser } from '../../store/reducer/User'
 import { deleteAdmin } from '../../store/reducer/Admin'
-import { useQueryClient } from 'react-query'
+import { useQueryClient  } from 'react-query'
 import exportedSwal from '../../utils/swal';
-import { systemConfig } from '../../config/System';
+//import { systemConfig } from '../../config/System';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -35,7 +30,6 @@ export default function Header(props: HeaderProps) {
   //const history = useHistory()
 
   const queryClient = useQueryClient()
-  
 
   const breadcrumbs = useSelector((state: RootState) => state.breadcrumbs.item)
   const titleheader = useSelector((state: RootState) => state.titleheader.value)
@@ -45,16 +39,15 @@ export default function Header(props: HeaderProps) {
   const dispatch = useDispatch()
 
   const actionLogout = () => {
-    queryClient.invalidateQueries()
+
+    queryClient.clear()
+
+    dispatch(deleteUser())
     dispatch(deleteAdmin())
     dispatch(setLoginfail())
-    dispatch(deleteUser())
 
     exportedSwal.actionSuccess("ทำการออกจากระบบเรียบร้อย กรุณารอสักครู่ ระบบจะพาคุณไปยังหน้า Login")
-    setTimeout(() => {
-      window.close();
-      window.open(`${systemConfig.HOST}/login`)
-    }, 1000);
+
   }
 
   return (

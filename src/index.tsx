@@ -19,15 +19,15 @@ let persistor = persistStore(store)
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <QueryClientProvider client={queryClient}>
-    <React.StrictMode>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <PersistGate loading={<>Loading ...</>} persistor={persistor}>
           <App />
         </PersistGate>
       </Provider >
-    </React.StrictMode>
-  </QueryClientProvider>,
+    </QueryClientProvider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
