@@ -39,7 +39,7 @@ function Pages() {
 
     const user = useSelector((state: RootState) => state.user.data)
 
-    const { data, isLoading  , isError   } = useQuery<APIJobApp_data, Error>('job-profiles', async () => exportedAPIJob.getJob(id, user.token))
+    const { data , isLoading  , isError   } = useQuery<APIJobApp_data, Error>('job-profiles', async () => exportedAPIJob.getJob(id, user.token))
     const [reloadpage , setReloading ] = useState<boolean>(false)
 
     const [nameTambonOne, setNameTambonOne] = useState<string>(data?.data.job.work_area_one ? data?.data.job.work_area_one : '')

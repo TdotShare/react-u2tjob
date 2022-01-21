@@ -9,7 +9,6 @@ import { routerPathProtectedUser } from '../../router/RouterPath';
 import { setBreadCms } from '../../store/reducer/Breadcrumbs';
 import { setTitle } from '../../store/reducer/TitleHeader';
 
-
 import { useQuery } from 'react-query'
 import exportedAPITopic from '../../utils/api/Topic'
 import { RootState } from '../../store/ConfigureStore'
@@ -38,6 +37,7 @@ function Pages() {
 
     const { data, isLoading } = useQuery<APITopic_data, Error>('job-data', async () => exportedAPITopic.getIsOpenJob(user.token))
 
+
     useEffect(() => {
         dispatch(setTitle(title))
         dispatch(setBreadCms([
@@ -46,6 +46,8 @@ function Pages() {
         ]))
         // eslint-disable-next-line 
     }, [])
+
+
 
     return (
         <>

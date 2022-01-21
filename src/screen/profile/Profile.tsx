@@ -35,17 +35,17 @@ function Pages() {
     const handleChange = (event: SelectChangeEvent) => {
         setTitleName(event.target.value);
     };
-    
+
     const resetPassowrdUser = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formdata = new FormData(event.currentTarget);
 
-        if( !formdata.get('password_new') || !formdata.get('password') ){
+        if (!formdata.get('password_new') || !formdata.get('password')) {
             exportedSwal.actionInfo(`กรุณากรอกข้อมูลการเปลี่ยนรหัสผ่านให้ครบ !`)
             return
         }
 
-        
+
         let passwordData = {
             "password": formdata.get('password'),
             "password_new": formdata.get('password_new'),
@@ -103,9 +103,6 @@ function Pages() {
         // eslint-disable-next-line 
     }, [])
 
-
-    console.log(data?.data)
-
     return (
         <>
             <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' }}>
@@ -147,7 +144,7 @@ function Pages() {
                                                 <InputLabel id="demo-simple-select-label">คำนำหน้า</InputLabel>
 
                                                 {
-                                                    data?.data?.title  ?
+                                                    data?.data?.title ?
 
                                                         <Select
                                                             value={titleName ? titleName : data?.data.title}
@@ -264,7 +261,7 @@ function Pages() {
                 </Container>
             </Paper>
 
-            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden' , mt: 2 }}>
+            <Paper sx={{ maxWidth: 1200, margin: 'auto', overflow: 'hidden', mt: 2 }}>
                 <AppBar
                     position="static"
                     color="default"

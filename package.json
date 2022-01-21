@@ -2,7 +2,6 @@
   "name": "react-u2tjob",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mis-ird.rmuti.ac.th/u2tjob",
   "dependencies": {
     "@date-io/luxon": "^2.11.1",
     "@date-io/moment": "^2.11.0",

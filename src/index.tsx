@@ -12,10 +12,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 
-
 let persistor = persistStore(store)
-
-
 const queryClient = new QueryClient();
 
 ReactDOM.render(
