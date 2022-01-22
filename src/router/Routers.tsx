@@ -11,7 +11,6 @@ import Page404 from '../screen/error/page404';
 
 function Routers() {
 
-
     return (
         <Router basename={systemConfig.BaseRouter}>
             <Switch>
