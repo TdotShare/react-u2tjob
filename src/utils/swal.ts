@@ -1,19 +1,32 @@
 import swal from 'sweetalert';
 
-const actionSuccess = (label : string) => {
+const actionSuccess = (label: string) => {
     swal("ทำรายการสำเร็จ", label, "success")
 }
-const actionInfo = (label : string) => {
-    swal("การทำรายการมีข้อผิดพลาด", label , "info")
+const actionInfo = (label: string) => {
+    swal("การทำรายการมีข้อผิดพลาด", label, "info")
 }
 const actionError = () => {
-    swal("ทำรายการล้มเหลว", 'ฐานข้อมูลอาจเกิดข้อผิดพลาด หรือ สัญญาณอินเตอร์ไม่เสถียร กรุณาติดต่อเจ้าหน้าที่ดูแลระบบ' , "error")
+    swal("ทำรายการล้มเหลว", 'ฐานข้อมูลอาจเกิดข้อผิดพลาด หรือ สัญญาณอินเตอร์ไม่เสถียร กรุณาติดต่อเจ้าหน้าที่ดูแลระบบ', "error")
 }
 
-const exportedSwal  = {
+
+const confirmDelete = async (text: string) => {
+
+    return swal({
+        title: "คุณแน่ใจไหม ?",
+        text: `คุณต้องการลบข้อมูล '${text}' ใช่หรือไม่?`,
+        icon: "warning",
+        buttons: ['Cancel', 'Ok']
+    })
+
+}
+
+const exportedSwal = {
     actionInfo,
     actionSuccess,
-    actionError
+    actionError,
+    confirmDelete
 };
 
 export default exportedSwal;

@@ -1,10 +1,17 @@
 import { Redirect, Route } from 'react-router-dom'
+
 import TopicScreen from '../screen/admin/topic/Topic'
 import TopicUpdateScreen from '../screen/admin/topic/TopicUpdate'
 import TopicCheckedScreen from '../screen/admin/topic/TopicChecked'
+
 import AccountScreen from '../screen/admin/account/Account'
 import AccountViewScreen from '../screen/admin/account/AccountView'
+
 import DashboardScreen from '../screen/admin/dashboard/Dashboard'
+
+import TambonScreen from '../screen/admin/tambon/Tambon'
+import TambonUpdateScreen from '../screen/admin/tambon/TambonUpdate'
+
 import { routerPathProtectedAdmin, routerPathPublic  , routerPathProtectedUser} from './RouterPath'
 import { RootState } from '../store/ConfigureStore'
 import { useSelector } from 'react-redux'
@@ -30,6 +37,8 @@ function ProtectedRoutesAdmin() {
             <Route exact path={`${routerPathProtectedAdmin.Topic}`} component={TopicScreen} />
             <Route exact path={`${routerPathProtectedAdmin.TopicUpdate}/:id`} component={TopicUpdateScreen} />
             <Route exact path={`${routerPathProtectedAdmin.TopicChecked}/:id`} component={TopicCheckedScreen} />
+            <Route exact path={`${routerPathProtectedAdmin.Tambon}`} component={TambonScreen} />
+            <Route exact path={`${routerPathProtectedAdmin.TambonUpdate}/:id`} component={TambonUpdateScreen} />
             <Route exact path={`${routerPathProtectedAdmin.Account}`} component={AccountScreen} />
             <Route exact path={`${routerPathProtectedAdmin.Account}/:id`} component={AccountViewScreen} />
         </>

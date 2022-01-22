@@ -6,7 +6,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { Card, Container, Grid, Typography } from '@mui/material';
 
 import Paperbase from '../../../components/template/Paperbase'
-import { routerPathProtectedAdmin, routerPathPublic } from '../../../router/RouterPath'
+import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
 
@@ -18,7 +18,6 @@ import LoadingData from '../../../components/LoadingData';
 import { RootState } from '../../../store/ConfigureStore';
 import { useQuery } from 'react-query'
 import { APIDashboard_data } from '../../../model/Dashboard';
-import { Redirect } from 'react-router-dom';
 
 
 function Topic() {

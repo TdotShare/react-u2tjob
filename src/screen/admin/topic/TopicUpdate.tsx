@@ -73,7 +73,7 @@ function Pages() {
         let resData = await exportedAPITopic.updateTopic(dataPost, admin.token)
 
         if (resData.bypass) {
-            queryClient.invalidateQueries('admin-topic-view')
+            queryClient.invalidateQueries(`admin-topic-view-${id}`)
             exportedSwal.actionSuccess(`แก้ไขข้อมูลเรียบร้อย`)
         } else {
             exportedSwal.actionInfo(resData.message)

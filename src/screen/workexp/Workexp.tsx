@@ -81,12 +81,11 @@ function Pages() {
 
         if (resData.bypass) {
             queryClient.invalidateQueries('workexperience-data')
-            exportedSwal.actionSuccess(`เพิ่มข้อมูลเรียบร้อย`)
+            exportedSwal.actionSuccess(`เพิ่มข้อมูล ประสบการณ์ทำงาน เรียบร้อย !`)
         } else {
             exportedSwal.actionInfo(resData.message)
         }
 
-        exportedSwal.actionSuccess(`เพิ่มข้อมูล ประสบการณ์ทำงาน เรียบร้อย !`)
     }
 
     const actionDeleteWorkexp = async (id: number) => {

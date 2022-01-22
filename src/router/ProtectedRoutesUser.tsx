@@ -15,16 +15,20 @@ import { useQuery } from 'react-query'
 
 function ProtectedRoutesUser() {
 
-  
+
 
   const user = useSelector((state: RootState) => state.user.data)
   const auth = useSelector((state: RootState) => state.user.auth)
 
   const { data } = useQuery<APIProfile_data, Error>('profile-view', async () => exportedAPIProfile.getProfile(user.token))
 
-  if (data?.status === "Unauthorized") {
-    exportedSwal.actionInfo("หมดระยะเวลาการใช้งาน กรุณาเข้าสู่ระบบใหม่อีกครั้ง !")
-    return <Redirect to={routerPathPublic.Login} />
+  if(data?.bypass){
+
+    if (data?.status === "Unauthorized") {
+      exportedSwal.actionInfo("หมดระยะเวลาการใช้งาน กรุณาเข้าสู่ระบบใหม่อีกครั้ง !")
+      return <Redirect to={routerPathPublic.Login} />
+    }
+
   }
 
   if (!auth) {

@@ -67,8 +67,7 @@ export default function Login() {
         }).then(res => {
             if (res.data.bypass) {
 
-
-                if (res.data.data.role) {
+                if (res.data.data.admin) {
 
                     dispatch(addAdmin({
                         email: res.data.data.email,
@@ -81,8 +80,6 @@ export default function Login() {
                     history.push(routerPathProtectedAdmin.Dashboard)
 
                 } else {
-
-                    console.log(res.data.data)
 
                     dispatch(addUser({
                         user_id: res.data.data.id,

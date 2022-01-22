@@ -1,6 +1,7 @@
 
 import { Profile } from "./Profile"
 import { Topic } from "./Topic"
+import { Tambon } from "./Tambon"
 
 export interface Job {
     id: number;
@@ -25,7 +26,7 @@ export interface Job {
 
 export type APIJobApp_data = {
     bypass: boolean,
-    data: { profile?: Profile, topic: Topic , job : Job },
+    data: { profile?: Profile, topic: Topic , job : Job , tambon : Tambon[] },
     status: string,
     message: string
 }

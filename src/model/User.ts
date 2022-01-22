@@ -5,6 +5,7 @@ interface Auth {
     firstname : string;
     surname : string;
     email : string;
+    admin : boolean;
     role : number;
     token : string;
 }

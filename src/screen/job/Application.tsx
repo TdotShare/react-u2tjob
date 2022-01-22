@@ -34,15 +34,15 @@ function Pages() {
     const queryClient = useQueryClient()
     const dispatch = useDispatch()
     const [title] = useState<string>("ยื่นใบสมัคร")
-    const [tambonWork] = useState(["พลกรัง", "โคกกรวด", "หมื่นไวย", "จันทึก", "พญาเย็น", "ดงใหญ่", "กระเบื้องใหญ่", "สีสุก", "บึงสำโรง", "ตูม", "มะเกลือใหม่", "หินดาด", "ทองหลาง"])
+    //const [tambonWork] = useState(["พลกรัง", "โคกกรวด", "หมื่นไวย", "จันทึก", "พญาเย็น", "ดงใหญ่", "กระเบื้องใหญ่", "สีสุก", "บึงสำโรง", "ตูม", "มะเกลือใหม่", "หินดาด", "ทองหลาง"])
     const [typeJobSpec] = useState(["ประชาชน อัตราค่าจ้าง 9,000 บาท", "บัณฑิตจบใหม่ อัตราจ้าง 15,000 บาท", "นักศึกษา อัตราจ้าง 5000 บาท"])
 
     const user = useSelector((state: RootState) => state.user.data)
 
-    const { data , isLoading  , isError   } = useQuery<APIJobApp_data, Error>('job-profiles', async () => exportedAPIJob.getJob(id, user.token))
-    const [reloadpage , setReloading ] = useState<boolean>(false)
+    const { data, isLoading, isError } = useQuery<APIJobApp_data, Error>('job-profiles', async () => exportedAPIJob.getJob(id, user.token))
+    const [reloadpage, setReloading] = useState<boolean>(false)
 
-    const [nameTambonOne, setNameTambonOne] = useState<string>(data?.data.job.work_area_one ? data?.data.job.work_area_one : '')
+    const [nameTambonOne, setNameTambonOne] = useState<string>('')
     const [nameTambonTwo, setNameTambonTwo] = useState<string>('')
     const [nameTypeJob, setNameTypeJob] = useState<string>('')
 
@@ -69,7 +69,7 @@ function Pages() {
 
         postData.append("apply_id", `${data?.data.job.id}`)
         postData.append("talent", `${formData.get('talent')}`)
-
+        
         if (nameTambonOneChecked) postData.append("work_area_one", nameTambonOneChecked)
         if (nameTambonTwoChecked) postData.append("work_area_two", nameTambonTwoChecked)
         if (typeJobChecked) postData.append("type_job", typeJobChecked)
@@ -116,10 +116,11 @@ function Pages() {
             { value: "ประกาศรับสมัครงาน", link: routerPathProtectedUser.Job, active: false, },
             { value: title, link: "", active: true, }
         ]))
+
         // eslint-disable-next-line 
     }, [])
 
-    if(isError){
+    if (isError) {
         return <Redirect to="/notfound" />
     }
 
@@ -127,7 +128,7 @@ function Pages() {
 
         <>
             {
-                isLoading || reloadpage?
+                isLoading || reloadpage ?
 
                     <LoadingData />
 
@@ -174,8 +175,8 @@ function Pages() {
                                                         label="เลือกพื้นที่ปฏิบัติงาน ลำดับที่ 1"
                                                         onChange={(event: SelectChangeEvent) => setNameTambonOne(event.target.value)}
                                                     >{
-                                                            tambonWork.map((item, index) => (
-                                                                <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                            data?.data.tambon.map((item) => (
+                                                                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
                                                             ))
                                                         }
                                                     </Select>
@@ -187,8 +188,8 @@ function Pages() {
                                                         label="เลือกพื้นที่ปฏิบัติงาน ลำดับที่ 1"
                                                         onChange={(event: SelectChangeEvent) => setNameTambonOne(event.target.value)}
                                                     >{
-                                                            tambonWork.map((item, index) => (
-                                                                <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                            data?.data.tambon.map((item) => (
+                                                                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
                                                             ))
                                                         }
                                                     </Select>
@@ -209,8 +210,8 @@ function Pages() {
                                                         label="เลือกพื้นที่ปฏิบัติงาน ลำดับที่ 2"
                                                         onChange={(event: SelectChangeEvent) => setNameTambonTwo(event.target.value)}
                                                     >{
-                                                            tambonWork.map((item, index) => (
-                                                                <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                            data?.data.tambon.map((item) => (
+                                                                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
                                                             ))
                                                         }
                                                     </Select>
@@ -222,8 +223,8 @@ function Pages() {
                                                         label="เลือกพื้นที่ปฏิบัติงาน ลำดับที่ 2"
                                                         onChange={(event: SelectChangeEvent) => setNameTambonTwo(event.target.value)}
                                                     >{
-                                                            tambonWork.map((item, index) => (
-                                                                <MenuItem key={index} value={item}>{item}</MenuItem>
+                                                            data?.data.tambon.map((item) => (
+                                                                <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
                                                             ))
                                                         }
                                                     </Select>
@@ -272,15 +273,15 @@ function Pages() {
                                 <Divider sx={{ marginTop: 2, marginBottom: 2 }}></Divider>
                                 <Typography  >หลักฐานการสมัคร</Typography>
                                 <Box sx={{ p: '2%', mt: 2 }}>
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid0)} files={evid0} setphoto={data?.data.job.evid0 ? true : false} shotnamefile='ภาพถ่ายผู้มัคร' title={`ภาพถ่ายผู้มัคร (ถ่ายไว้ไม่เกิน 3 เดือน)`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid0(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid1)} files={evid1} setphoto={data?.data.job.evid1 ? true : false} shotnamefile='หนังสือรับรองคุณวุติ' title={`สำเนาปริญญาบัตร หรือ หนังสือรับรองคุณวุติ`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid1(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid2)} files={evid2} setphoto={data?.data.job.evid2 ? true : false} shotnamefile='Transcript' title={`Transcript`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid2(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid3)} files={evid3} setphoto={data?.data.job.evid3 ? true : false} shotnamefile='สำเนาหลักฐานการเปลี่ยนชื่อสกุล' title={`สำเนาหลักฐานการเปลี่ยนชื่อสกุล (ถ้ามี)`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid3(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid4)} files={evid4} setphoto={data?.data.job.evid4 ? true : false} shotnamefile='สำเนาบัตรประชาชน' title={`สำเนาบัตรประชาชน`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid4(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid5)} files={evid5} setphoto={data?.data.job.evid5 ? true : false} shotnamefile='สำเนาทะเบียนบ้าน' title={`สำเนาทะเบียนบ้าน`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid5(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid6)} files={evid6} setphoto={data?.data.job.evid6 ? true : false} shotnamefile='สำเนาหลักฐานการเกณฑ์ทหาร' title={`สำเนาหลักฐานการเกณฑ์ทหาร`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid6(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid7)} files={evid7} setphoto={data?.data.job.evid7 ? true : false} shotnamefile='ใบรับรองพื้นที่' title={`ใบรับรองพื้นที่`} fileData={(data: File | undefined) =>{ if(data !== undefined)setEvid7(data) }} />
-                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid8)} files={evid8} setphoto={data?.data.job.evid8 ? true : false} shotnamefile='เอกสารอื่นๆ' title={`เอกสารอื่นๆ`} fileData={(data: File | undefined) => { if(data !== undefined)setEvid8(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid0)} files={evid0} setphoto={data?.data.job.evid0 ? true : false} shotnamefile='ภาพถ่ายผู้มัคร' title={`ภาพถ่ายผู้มัคร (ถ่ายไว้ไม่เกิน 3 เดือน)`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid0(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid1)} files={evid1} setphoto={data?.data.job.evid1 ? true : false} shotnamefile='หนังสือรับรองคุณวุติ' title={`สำเนาปริญญาบัตร หรือ หนังสือรับรองคุณวุติ`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid1(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid2)} files={evid2} setphoto={data?.data.job.evid2 ? true : false} shotnamefile='Transcript' title={`Transcript`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid2(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid3)} files={evid3} setphoto={data?.data.job.evid3 ? true : false} shotnamefile='สำเนาหลักฐานการเปลี่ยนชื่อสกุล' title={`สำเนาหลักฐานการเปลี่ยนชื่อสกุล (ถ้ามี)`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid3(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid4)} files={evid4} setphoto={data?.data.job.evid4 ? true : false} shotnamefile='สำเนาบัตรประชาชน' title={`สำเนาบัตรประชาชน`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid4(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid5)} files={evid5} setphoto={data?.data.job.evid5 ? true : false} shotnamefile='สำเนาทะเบียนบ้าน' title={`สำเนาทะเบียนบ้าน`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid5(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid6)} files={evid6} setphoto={data?.data.job.evid6 ? true : false} shotnamefile='สำเนาหลักฐานการเกณฑ์ทหาร' title={`สำเนาหลักฐานการเกณฑ์ทหาร`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid6(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid7)} files={evid7} setphoto={data?.data.job.evid7 ? true : false} shotnamefile='ใบรับรองพื้นที่' title={`ใบรับรองพื้นที่`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid7(data) }} />
+                                    <InputUploadFile urlData={() => actionUrlOpen(data?.data.job.evid8)} files={evid8} setphoto={data?.data.job.evid8 ? true : false} shotnamefile='เอกสารอื่นๆ' title={`เอกสารอื่นๆ`} fileData={(data: File | undefined) => { if (data !== undefined) setEvid8(data) }} />
                                 </Box>
                                 <Button type="submit" fullWidth variant="contained" sx={{ mt: 0, mb: 2 }} >
                                     บันทึกข้อมูล

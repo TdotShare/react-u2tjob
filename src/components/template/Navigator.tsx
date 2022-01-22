@@ -19,6 +19,7 @@ import { routerPathProtectedAdmin, routerPathProtectedUser } from '../../router/
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
 import TopicIcon from '@mui/icons-material/Topic';
+import ExtensionIcon from '@mui/icons-material/Extension';
 
 // const categories = [
 //   {
@@ -57,7 +58,9 @@ const menuAdmin = [
     children: [
       { id: 'ภาพรวมระบบ', icon: <DashboardIcon />, link: routerPathProtectedAdmin.Dashboard },
       { id: 'เปิดรอบสมัครงาน', icon: <TopicIcon />, link: routerPathProtectedAdmin.Topic },
+      { id: 'ตำบล', icon: <ExtensionIcon />, link: routerPathProtectedAdmin.Tambon },
       { id: 'ผู้ใช้งานระบบ', icon: <GroupIcon />, link: routerPathProtectedAdmin.Account },
+
     ],
   },
 ];
