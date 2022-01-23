@@ -35,6 +35,10 @@ function Pages() {
     const { data, isLoading } = useQuery<APITambon_data, Error>('tambon-data', async () => exportedAPITambon.getTambonAll(admin.token))
 
     const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ไอดี', width: 150 },
+        { field: 'name', headerName: 'ชื่อตำบล', width: 200 },
+        { field: 'create_at', headerName: 'สร้างเมื่อ', width: 200 },
+        { field: 'update_at', headerName: 'แก้ไขเมื่อ', width: 200 },
         {
             field: "delete",
             headerName: "",
@@ -61,10 +65,6 @@ function Pages() {
                 );
             }
         },
-        { field: 'id', headerName: 'ไอดี', width: 150 },
-        { field: 'name', headerName: 'ชื่อตำบล', width: 200 },
-        { field: 'create_at', headerName: 'สร้างเมื่อ', width: 200 },
-        { field: 'update_at', headerName: 'แก้ไขเมื่อ', width: 200 },
 
     ];
 

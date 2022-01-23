@@ -75,6 +75,13 @@ function Pages() {
     }
 
     const columns: GridColDef[] = [
+        { field: 'id', headerName: 'IDTopic', width: 100 },
+        { field: 'name', headerName: 'ชื่องาน', width: 400 },
+        { field: 'round', headerName: 'รอบ' },
+        { field: 'countuser', headerName: 'ผู้สมัครทั้งหมด', width: 250 },
+        { field: 'status', headerName: 'สถานะการใช้งาน', renderCell: (params) => { return (<Typography>{params.row.status === 1 ? "เปิดการใช้งาน" : "ซ่อน"}</Typography>) } , width : 150 },
+        { field: 'isshow', headerName: 'สถานะการเผยแพร่', renderCell: (params) => { return (<Typography>{params.row.isshow === 1 ? "เผยแพร่" : "ซ่อน"}</Typography>) } , width : 150 },
+        { field: 'time', headerName: 'ปิดรับสมัคร', width: 200 },
         {
             field: "actions",
             headerName: "Actions",
@@ -108,13 +115,6 @@ function Pages() {
                 );
             }
         },
-        { field: 'id', headerName: 'IDTopic', width: 100 },
-        { field: 'name', headerName: 'ชื่องาน', width: 400 },
-        { field: 'round', headerName: 'รอบ' },
-        { field: 'countuser', headerName: 'ผู้สมัครทั้งหมด', width: 250 },
-        { field: 'status', headerName: 'สถานะการใช้งาน', renderCell: (params) => { return (<Typography>{params.row.status === 1 ? "เปิดการใช้งาน" : "ซ่อน"}</Typography>) } , width : 150 },
-        { field: 'isshow', headerName: 'สถานะการเผยแพร่', renderCell: (params) => { return (<Typography>{params.row.isshow === 1 ? "เผยแพร่" : "ซ่อน"}</Typography>) } , width : 150 },
-        { field: 'time', headerName: 'ปิดรับสมัคร', width: 200 },
 
     ];
 
