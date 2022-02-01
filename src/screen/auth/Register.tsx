@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { APIAuth_data } from '../../model/User';
 import exportedSwal from '../../utils/swal';
+import { routerPathPublic } from '../../router/RouterPath';
 
 
 export default function Register() {
@@ -42,6 +43,7 @@ export default function Register() {
         axios.post<APIAuth_data>(`${systemConfig.API}/auth/register`, { "idcard": data.idcard.value, "password": data.password.value }).then(res => {
             if (res.data.bypass) {
                 exportedSwal.actionSuccess("สมัครสมาชิกเรียบร้อย กลับไปยังหน้า login เพื่อเข้าสู่ระบบ")
+                history.replace(routerPathPublic.Login)
             } else {
                 exportedSwal.actionInfo(`การสมัครสมาชิกไม่สำเร็จ เนื่องจาก ${res.data.message}`)
             }
