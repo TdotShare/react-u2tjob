@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Navigator from './Navigator';
 import Header from './Header';
+import { exportedColor } from '../../utils/color';
 
 function Copyright() {
   return (
@@ -23,18 +24,7 @@ function Copyright() {
 //main: '#009be5',
 
 let theme = createTheme({
-  palette: {
-    primary: {
-      light: '#af52bf',
-      main: '#9c27b0',
-      dark: '#6d1b7b',
-    },
-    secondary :{
-      light: '#f73378',
-      main: '#f50057',
-      dark: '#ab003c',
-    }
-  },
+  palette: exportedColor,
   typography: {
     fontFamily: "'Mitr', sans-serif;",
     h5: {

@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { APIAuth_data } from '../../model/User';
 import exportedSwal from '../../utils/swal';
+import { exportedColor } from '../../utils/color'
 import { routerPathPublic } from '../../router/RouterPath';
 
 
@@ -55,18 +56,7 @@ export default function Register() {
 
     return (
         <ThemeProvider theme={createTheme({
-            palette: {
-                primary: {
-                  light: '#af52bf',
-                  main: '#9c27b0',
-                  dark: '#6d1b7b',
-                },
-                secondary :{
-                  light: '#f73378',
-                  main: '#f50057',
-                  dark: '#ab003c',
-                }
-            },
+            palette: exportedColor,
             typography: {
                 fontFamily: "'Mitr', sans-serif;",
             }
@@ -84,7 +74,7 @@ export default function Register() {
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography sx={{'textAlign' : 'center'}} component="h1" variant="h5">
+                    <Typography sx={{ 'textAlign': 'center' }} component="h1" variant="h5">
                         {systemConfig.NameFull} <br />
                         ( สมัครสมาชิก )
                     </Typography>

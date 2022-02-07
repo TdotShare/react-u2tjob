@@ -1,5 +1,5 @@
 import { Button, Grid, Stack } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import UploadIcon from '@mui/icons-material/Upload';
 import PhotoIcon from '@mui/icons-material/Photo';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
@@ -18,9 +18,6 @@ type AppPros = {
 
 
 function InputUploadFile(props: AppPros) {
-
-    //const [files, setfile] = useState<File>()
-    const [photo] = useState(props.setphoto)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -45,14 +42,7 @@ function InputUploadFile(props: AppPros) {
                 <Grid item xs={12} sm={12} md={12} lg={12}  >
                     <Stack spacing={1} direction="row">
                         <Button variant="contained" component="label" startIcon={<UploadIcon />} >
-                            {props.files ?
-
-                                props.files.name.length > 20 ? `${props.shotnamefile}" | "${props.files.type}` : props.files.name
-
-                                :
-
-                                'Upload'
-                            }
+                            {props.files ?  `${props.shotnamefile} | ${props.files.type}` : 'Upload' }
                             <input
                                 accept="image/png,image/jpeg"
                                 onChange={handleChange}
@@ -61,10 +51,9 @@ function InputUploadFile(props: AppPros) {
                             />
                         </Button>
                         <label htmlFor="contained-button-file">
-                            <Button  onClick={props.urlData} startIcon={photo ? <PhotoIcon /> : <ImageNotSupportedIcon />} variant="contained" color={photo ? `primary` : `secondary` } component="span">
+                            <Button  onClick={props.urlData} startIcon={props.setphoto ? <PhotoIcon /> : <ImageNotSupportedIcon />} variant="contained" color={props.setphoto ? `primary` : `secondary` } component="span">
                                 {
-                                    photo ? "ดูไฟล์ต้นฉบับ" : "ไม่พบไฟล์"
-
+                                    props.setphoto ? "ดูไฟล์ต้นฉบับ" : "ไม่พบไฟล์"
                                 }
                             </Button>
                         </label>
