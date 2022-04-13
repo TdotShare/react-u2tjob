@@ -5,7 +5,6 @@ import { useDispatch , useSelector } from 'react-redux'
 import { alpha, styled } from '@mui/material/styles';
 import { Card, Container, Grid, Typography } from '@mui/material';
 
-import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
@@ -20,11 +19,7 @@ import { useQuery } from 'react-query'
 import { APIDashboard_data } from '../../../model/Dashboard';
 
 
-function Topic() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
+
 
 const RootStyle = styled(Card)(({ theme }) => ({
     boxShadow: '2',
@@ -50,7 +45,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 
-function Pages() {
+function Dashboard() {
 
 
 
@@ -116,4 +111,4 @@ function Pages() {
 }
 
 
-export default Topic
+export default Dashboard

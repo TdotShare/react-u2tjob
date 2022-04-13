@@ -16,14 +16,9 @@ import { RootState } from '../../store/ConfigureStore'
 import { APIEducation_data } from '../../model/Education'
 import LoadingData from '../../components/LoadingData'
 
+
+
 function Education() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
-
-
-function Pages() {
 
     const queryClient = useQueryClient()
 

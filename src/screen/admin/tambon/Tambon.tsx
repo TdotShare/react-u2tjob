@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
-import Paperbase from '../../../components/template/Paperbase'
 import { useDispatch, useSelector } from 'react-redux'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
@@ -18,14 +17,10 @@ import DataGridList from '../../../components/DataGridList'
 import { useHistory } from 'react-router-dom'
 
 
+
+
+
 function Tambon() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
-
-
-function Pages() {
 
     const queryClient = useQueryClient()
     const history = useHistory()

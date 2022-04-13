@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { AppBar, Button, Container, Grid, Paper, Toolbar, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
@@ -16,14 +15,8 @@ import exportedAPIAccount from '../../../utils/api/Account'
 
 
 
-function Topic() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
 
-
-function Pages() {
+function Account() {
 
     const queryClient = useQueryClient()
     const history = useHistory()
@@ -149,4 +142,4 @@ function Pages() {
 }
 
 
-export default Topic
+export default Account

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { AppBar, Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, TextField, Toolbar, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
@@ -16,13 +15,9 @@ import LoadingData from '../../../components/LoadingData'
 
 
 
-function TopicUpdate() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
 
-function Pages() {
+
+function TopicUpdate() {
 
     const queryClient = useQueryClient()
     const admin = useSelector((state: RootState) => state.admin.data)
