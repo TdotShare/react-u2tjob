@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { AppBar, Button, Container, Grid, Paper, Toolbar, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import Paperbase from '../../../components/template/Paperbase'
 import { routerPathProtectedAdmin } from '../../../router/RouterPath'
 import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
@@ -19,13 +18,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import exportedSwal from '../../../utils/swal'
 
-function TopicUpdate() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
 
-function Pages() {
+function TopicChecked() {
 
 
     const history = useHistory()
@@ -276,4 +270,4 @@ function Pages() {
 }
 
 
-export default TopicUpdate
+export default TopicChecked

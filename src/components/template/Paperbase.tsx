@@ -8,6 +8,10 @@ import Link from '@mui/material/Link';
 import Navigator from './Navigator';
 import Header from './Header';
 import { exportedColor } from '../../utils/color';
+import { RootState } from '../../store/ConfigureStore';
+import { useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { routerPathPublic } from '../../router/RouterPath';
 
 function Copyright() {
   return (
@@ -169,12 +173,20 @@ type Props = {
 }
 
 export default function Paperbase({ children }: Props) {
+
+
+  const auth = useSelector((state: RootState) => state.user.auth)
+  
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  if (!auth) {
+    return <Redirect to={routerPathPublic.Login} />
+  }
 
   return (
     <ThemeProvider theme={theme}>

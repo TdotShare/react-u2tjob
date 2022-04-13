@@ -1,7 +1,6 @@
 import { AppBar, Paper, Toolbar, Grid, Typography, Container, Box, Divider, Button, TextField, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Paperbase from '../../components/template/Paperbase'
 import { routerPathProtectedUser } from '../../router/RouterPath';
 import { setBreadCms } from '../../store/reducer/Breadcrumbs';
 import { setTitle } from '../../store/reducer/TitleHeader';
@@ -19,14 +18,6 @@ import exportedSwal from '../../utils/swal';
 import { systemConfig } from '../../config/System';
 
 function Application() {
-
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
-
-
-function Pages() {
 
 
     const { id }: any = useParams();

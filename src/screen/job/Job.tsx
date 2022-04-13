@@ -3,7 +3,6 @@ import { AppBar, Paper, Toolbar, Grid, Typography, Container, Button, Box, Alert
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import Paperbase from '../../components/template/Paperbase'
 import { APITopic_data } from '../../model/Topic';
 import { routerPathProtectedUser } from '../../router/RouterPath';
 import { setBreadCms } from '../../store/reducer/Breadcrumbs';
@@ -16,15 +15,8 @@ import LoadingData from '../../components/LoadingData'
 import BookIcon from '@mui/icons-material/Book';
 import { systemConfig } from '../../config/System';
 
+
 function Index() {
-
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
-
-
-function Pages() {
 
 
     const [dateJob] = useState<Date>(new Date());

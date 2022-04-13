@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { AppBar, Box, Button, Container, Grid, Paper, TextField, Toolbar, Typography } from '@mui/material'
-import Paperbase from '../../components/template/Paperbase'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTitle } from '../../store/reducer/TitleHeader'
 import { setBreadCms } from '../../store/reducer/Breadcrumbs'
@@ -17,14 +16,8 @@ import { RootState } from '../../store/ConfigureStore'
 import { useQuery, useQueryClient } from 'react-query'
 import LoadingData from '../../components/LoadingData'
 
+
 function Training() {
-    return (
-        <Paperbase children={Pages()} />
-    )
-}
-
-
-function Pages() {
 
     const queryClient = useQueryClient()
 
