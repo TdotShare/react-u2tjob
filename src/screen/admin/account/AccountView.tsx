@@ -7,7 +7,7 @@ import { setBreadCms } from '../../../store/reducer/Breadcrumbs'
 import { setTitle } from '../../../store/reducer/TitleHeader'
 import DataGridList from '../../../components/DataGridList'
 import { GridColDef } from '@mui/x-data-grid'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { RootState } from '../../../store/ConfigureStore'
 import exportedAPIAccount from '../../../utils/api/Account'
 import { APIProfileView_data } from '../../../model/Profile'
@@ -20,6 +20,8 @@ import LoadingData from '../../../components/LoadingData'
 function AccountView() {
 
     const { id }: any = useParams();
+
+    const queryClient = useQueryClient()
 
     const [degree] = useState([
         "ประถมศึกษา",
@@ -68,7 +70,7 @@ function AccountView() {
 
 
     const admin = useSelector((state: RootState) => state.admin.data)
-    const { data, isLoading, isError } = useQuery<APIProfileView_data, Error>(`account-view-${id}`, async () => exportedAPIAccount.getAccount(id, admin.token))
+    const { data, isLoading, isError } = useQuery<APIProfileView_data, Error>(`account-view`, async () => exportedAPIAccount.getAccount(id, admin.token))
 
     const dispatch = useDispatch()
     const [title] = useState<string>(`ดูข้อมูลผู้ใช้งาน - ${id}`)
@@ -80,8 +82,16 @@ function AccountView() {
             { value: "ผู้ใช้งานระบบ", link: routerPathProtectedAdmin.Account, active: false, },
             { value: `${id}`, link: '', active: true, },
         ]))
+
+        return () => {
+            queryClient.removeQueries('account-view')
+        }
+        
         // eslint-disable-next-line 
     }, [])
+
+
+    
 
     if (isError) {
         return <Redirect to="/notfound" />
