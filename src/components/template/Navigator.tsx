@@ -58,7 +58,6 @@ const menuAdmin = [
     children: [
       { id: 'ภาพรวมระบบ', icon: <DashboardIcon />, link: routerPathProtectedAdmin.Dashboard },
       { id: 'เปิดรอบสมัครงาน', icon: <TopicIcon />, link: routerPathProtectedAdmin.Topic },
-      { id: 'ตำบล', icon: <ExtensionIcon />, link: routerPathProtectedAdmin.Tambon },
       { id: 'ผู้ใช้งานระบบ', icon: <GroupIcon />, link: routerPathProtectedAdmin.Account },
 
     ],

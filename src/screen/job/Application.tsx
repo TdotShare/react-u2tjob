@@ -25,9 +25,7 @@ function Application() {
     const queryClient = useQueryClient()
     const dispatch = useDispatch()
     const [title] = useState<string>("ยื่นใบสมัคร")
-    //const [tambonWork] = useState(["พลกรัง", "โคกกรวด", "หมื่นไวย", "จันทึก", "พญาเย็น", "ดงใหญ่", "กระเบื้องใหญ่", "สีสุก", "บึงสำโรง", "ตูม", "มะเกลือใหม่", "หินดาด", "ทองหลาง"])
-    const [typeJobSpec] = useState(["ประชาชน อัตราค่าจ้าง 9,000 บาท", "บัณฑิตจบใหม่ อัตราจ้าง 15,000 บาท", "นักศึกษา อัตราจ้าง 5000 บาท"])
-
+    const [typeJobSpec] = useState(["บุคคลจากตำบล", "นักศึกษาจบใหม่"])
     const user = useSelector((state: RootState) => state.user.data)
 
     const { data, isLoading, isError } = useQuery<APIJobApp_data, Error>('job-profiles', async () => exportedAPIJob.getJob(id, user.token))
